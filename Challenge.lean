@@ -9,7 +9,7 @@ import Mathlib
 
 This file is the human-auditable statement. It imports only Mathlib.
 
-**The compared set is exactly the theorems stated in this file.** Nothing outside it is claimed.
+**The compared set is exactly the theorems and definitions stated in this file and listed in `comparator.json`.** Nothing outside it is claimed.
 
 ## Why this entry exists — read this first
 
@@ -257,7 +257,7 @@ def SchwExterior (M : ℝ) : Set (Fin 4 → ℝ) :=
 
 /-- **The Schwarzschild metric solves the vacuum Einstein equations.**
 
-At every point of the exterior chart `r > 2M > 0`, `sin θ ≠ 0`, every one of the sixteen
+At every point of the exterior chart `r > 0` and `r > 2M` (no sign assumption is made on `M`), `sin θ ≠ 0`, every one of the sixteen
 components of the Ricci tensor of `diag(−(1 − 2M/r), (1 − 2M/r)⁻¹, r², r² sin²θ)` is zero.
 
 Scope: this is a statement about that one chart. It says nothing at `r = 2M`, at `r ≤ 0`, at
