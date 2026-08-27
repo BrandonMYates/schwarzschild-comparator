@@ -1,41 +1,34 @@
 version: v0.4
 project:
   name: Exact solutions of the vacuum and sourced Einstein field equations, verified in coordinates
-  description: 'Twenty-one theorems and thirty-three definitions, machine-checked in Lean 4 against
-    Mathlib v4.32.0: the Schwarzschild, Schwarzschild-de Sitter (Kottler), Reissner-Nordstrom (with
-    the Maxwell stress tensor defined and G = 8 pi T proved in all sixteen components), ingoing Vaidya
-    (rank-one null dust, for a merely once-differentiable mass function), spatially flat FLRW (both
-    Friedmann equations in Einstein-tensor form), static de Sitter, Minkowski-in-spherical and Kiselev
-    metrics, together with Birkhoff uniqueness in the areal static gauge and the n != 2 equivalence
-    of the two forms of the vacuum equations.
-
-
-    The results are classical and NO NEW MATHEMATICS IS CLAIMED: this is a proof of concept for the
-    definitions. Lean checks that a proof establishes a statement, not that a definition means what
-    its name says, so the entry certifies its sign, index and contraction conventions by computing
-    textbook solutions with them -- including four NONZERO answers (de Sitter R = 12/L^2, Reissner-Nordstrom
-    R_thetatheta = Q^2/r^2, Vaidya R_vv = 2m''(v)/r^2, Kiselev R_thetatheta = -3wc r^-(3w+1)), because
-    a curvature definition that was accidentally identically zero would still prove every vacuum theorem
-    here.
-
-
-    Scope: everything is a computation in ONE FIXED CHART, an open subset of R^4 -- no atlas, no manifold,
-    no coordinate-independence theorem, no maximal extension, and horizons and coordinate poles lie
-    outside every statement. NOT compared: Ricci symmetry R_bd = R_db in general (it needs Clairaut
-    for the coordinate partial derivative, which Mathlib supplies only for fderiv) or the Bianchi
-    identities; Maxwell''s own equations; any matter model, fluid or energy condition beyond the single
-    defined Maxwell stress tensor; non-flat FLRW; the outgoing Vaidya chart.
-
-
-    Audience: general relativists, for whom this is the definitional layer a junction-condition or
-    thin-shell statement would be written against, and the formalization community, for whom it is
-    coverage-creating rather than coverage-duplicating.
-
-
-    Mathlib v4.32.0 contains no curvature of any kind -- christoffel, ricci, scalarCurvature, Lorentzian,
-    PseudoRiemannian and five further names return zero hits across all 8,264 .lean files at revision
-    81a5d257c8e410db227a6665ed08f64fea08e997, and its one metric structure hard-codes positive definiteness
-    -- so the entire chain is defined inline in the Challenge.'
+  description: >-
+    Twenty-one theorems and thirty-three definitions, machine-checked in Lean 4 against Mathlib
+    v4.32.0: the Schwarzschild, Schwarzschild-de Sitter (Kottler), Reissner-Nordstrom (with the
+    Maxwell stress tensor defined and G = 8 pi T proved in all sixteen components), ingoing
+    Vaidya (null dust of rank at most one, rank one wherever dm/dv ≠ 0, for a merely
+    once-differentiable mass function), spatially flat FLRW (both Friedmann equations in
+    Einstein-tensor form), static de Sitter, Minkowski-in-spherical and Kiselev metrics,
+    together with Birkhoff uniqueness in the areal static gauge and the n != 2 equivalence of
+    the two forms of the vacuum equations. The results are classical and NO NEW MATHEMATICS IS
+    CLAIMED: this is a proof of concept for the definitions. Lean checks that a proof
+    establishes a statement, not that a definition means what its name says, so the entry
+    certifies its sign, index and contraction conventions by computing textbook solutions with
+    them -- including four NONZERO answers (de Sitter R = 12/L^2, Reissner-Nordstrom
+    R_thetatheta = Q^2/r^2, Vaidya R_vv = 2 (dm/dv)/r^2, Kiselev R_thetatheta = -3wc r^-(3w+1)),
+    because a curvature definition that was accidentally identically zero would still prove
+    every vacuum theorem here. Scope: everything is a computation in ONE FIXED CHART, an open
+    subset of R^4 -- no atlas, no manifold, no coordinate-independence theorem, no maximal
+    extension, and horizons and coordinate poles lie outside every statement. NOT compared:
+    Ricci symmetry R_bd = R_db in general (it needs Clairaut for the coordinate partial
+    derivative, which Mathlib supplies only for fderiv) or the Bianchi identities; Maxwell's own
+    equations; any matter model, fluid or energy condition beyond the single defined Maxwell
+    stress tensor; non-flat FLRW; the outgoing Vaidya chart. Audience: general relativists, for
+    whom this is the definitional layer a junction-condition or thin-shell statement would be
+    written against, and the formalization community, for whom it is coverage-creating rather
+    than coverage-duplicating. Mathlib v4.32.0 contains no curvature of any kind -- christoffel,
+    ricci, scalarCurvature, Lorentzian, PseudoRiemannian and five further names return zero hits
+    across all 8,264 .lean files at the pinned revision, and its one metric structure hard-codes
+    positive definiteness -- so the entire chain is defined inline in the Challenge.
   authors:
   - Brandon Yates
   license: Apache-2.0
@@ -44,7 +37,7 @@ project:
 repository:
   substantive_formalization:
     id: BrandonMYates/grlab
-    revision: 0f5b6e19565370cf46fca8847d249e553a872e3b
+    revision: 88aa2e75dc1bb7fb06e33c51c2447acb456edd4a
     note: 'Thin wrapper: the Challenge and Solution state and bridge, and the whole proof development
       (17 modules, 4,431 lines) lives in the GRLab library named here, pinned by commit in lakefile.toml.'
 classification:
@@ -318,7 +311,7 @@ alignment:
     lean: SchwarzschildVacuum.ricci_vaidya_null_dust
     status: proved
     note: R_uv = (2m'(v)/r^2) delta^v_u delta^v_v, ingoing chart, for a once-differentiable mass function.
-      No m'' is requested.
+      No second derivative of m is requested.
   - source: Vaidya 1951; the trace of a null Ricci tensor
     lean: SchwarzschildVacuum.vaidya_scalarCurvature_eq_zero
     status: proved
@@ -327,7 +320,7 @@ alignment:
   - source: Vaidya 1951, in Einstein-tensor form
     lean: SchwarzschildVacuum.einstein_vaidya
     status: proved
-    note: G equals the same rank-one null table, since R = 0. No stress tensor is defined; "null dust"
+    note: G equals the same rank-at-most-one null table, since R = 0. No stress tensor is defined; "null dust"
       describes the form only.
   - source: Friedmann 1922 and Lemaitre 1927; expression as in Carroll (8.67)
     lean: SchwarzschildVacuum.friedmann_first

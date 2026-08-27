@@ -53,8 +53,8 @@ equations agree away from dimension two. Parts III–XI state the solutions:
 | III | **Schwarzschild** `f = 1 − 2M/r` | `R_{μν} = 0`, `G_{μν} = 0`, `R = 0` |
 | IV | **Schwarzschild–de Sitter (Kottler)** `f = 1 − 2M/r − Λr²/3` | `R_{μν} = Λ g_{μν}` |
 | V | areal static gauge | the Schwarzschild family is the **only** vacuum lapse |
-| VI | **Reissner–Nordström** `f = 1 − 2M/r + Q²/r²` | `G_{μν} = 8π T_{μν}` for the *defined* Maxwell stress tensor of the Coulomb field — the full Einstein–Maxwell system — plus `R = 0` and `R_θθ = Q²/r² ≠ 0` |
-| VII | **ingoing Vaidya** `ds² = −(1 − 2m(v)/r) dv² + 2 dv dr + r² dΩ²` | `R_{μν} = (2m′(v)/r²) δ^v_μ δ^v_ν`, rank-one null dust; `R = 0`; the Einstein-tensor form |
+| VI | **Reissner–Nordström** `f = 1 − 2M/r + Q²/r²` | `G_{μν} = 8π T_{μν}` for the *defined* Maxwell stress tensor of the Coulomb field — the Einstein equation with the defined Maxwell stress tensor; Maxwell's equations are neither stated nor used — plus `R = 0` and `R_θθ = Q²/r² ≠ 0` |
+| VII | **ingoing Vaidya** `ds² = −(1 − 2m(v)/r) dv² + 2 dv dr + r² dΩ²` | `R_{μν} = (2m′(v)/r²) δ^v_μ δ^v_ν`, rank-at-most-one null dust (rank one wherever m′(v) ≠ 0); `R = 0`; the Einstein-tensor form |
 | VIII | **spatially flat FLRW** `ds² = −dt² + a(t)²(dx² + dy² + dz²)` | the two Friedmann equations in Einstein-tensor form, and vanishing off-diagonal `G` |
 | IX | **static de Sitter** `f = 1 − r²/L²` | `R_{μν} = (3/L²) g_{μν}`, `R = 12/L²` |
 | X | **Minkowski in spherical coordinates** `f = 1` | Ricci-flat — the sanity check |
@@ -122,7 +122,7 @@ mathematical meaning and is used with no other.
   Parts IV and IX it means exactly `R_{μν} = Λ g_{μν}`. For Part VI a stress-energy tensor **is**
   defined — the Maxwell tensor `T_{μν} = (1/4π)(F_{μα}F_ν{}^α − ¼ g_{μν}F_{αβ}F^{αβ})` of the
   Coulomb field `F = (Q/r²) dt ∧ dr` — and `G_{μν} = 8π T_{μν}` is proved for it; that is the
-  Einstein half of the Einstein–Maxwell system, and Maxwell's equations `∇_μ F^{μν} = 0` and
+  Einstein equation with the defined Maxwell stress tensor, and Maxwell's equations `∇_μ F^{μν} = 0` and
   `dF = 0` are **not** stated or used. For Parts VII and VIII **no** stress-energy tensor is
   defined at all: the statements compute `R_{μν}` and `G_{μν}` and exhibit their form, and
   calling the Vaidya source "null dust" or the FLRW source "a perfect fluid" is a description
@@ -326,7 +326,7 @@ theorem exists_mass_of_areal_vacuum {f f₁ : ℝ → ℝ} {a b : ℝ} (hab : a 
     ∃ M : ℝ, ∀ r ∈ Set.Ioo a b, f r = 1 - 2 * M / r := by
   sorry
 
-/-! # Part VI — Reissner–Nordström, and the Einstein–Maxwell system
+/-! # Part VI — Reissner–Nordström: the Einstein equation with the Maxwell stress tensor
 
 `ds² = −f dt² + f⁻¹ dr² + r² dΩ²` with `f = 1 − 2M/r + Q²/r²`, sourced by the Coulomb field
 `F = (Q/r²) dt ∧ dr`.  This is the one place in this file where a stress-energy tensor is
@@ -395,13 +395,13 @@ theorem faradayInvariant_coulomb {M Q : ℝ} {x : Fin 4 → ℝ} (hx : x ∈ RNR
     faradayInvariant (reissnerNordstrom M Q) (coulombF Q) x = -(2 * Q ^ 2 / (x 1) ^ 4) := by
   sorry
 
-/-- **The Einstein–Maxwell equations for the charged black hole**:
+/-- **The Einstein equation with the defined Maxwell stress tensor, for the charged black hole**:
 `G_{μν} = 8π T_{μν}`, in all sixteen components, on the whole chart region, where `T` is the
 Maxwell stress-energy tensor of the Coulomb field defined above and every index is raised with
 the inverse Reissner–Nordström metric.
 
 Both sides are built from the definitions in this file, so this is the Einstein half of the
-Einstein–Maxwell system stated in full.  **Maxwell's own equations are not part of it**:
+Einstein equation with the defined Maxwell stress tensor.  **Maxwell's own equations are not part of it**:
 neither `∇_μ F^{μν} = 0` nor `dF = 0` is stated or used anywhere. -/
 theorem reissnerNordstrom_einstein_eq_maxwell {M Q : ℝ} {x : Fin 4 → ℝ}
     (hx : x ∈ RNRegion M Q) (b d : Fin 4) :
@@ -426,7 +426,7 @@ noncomputable def vaidyaMetric (m : ℝ → ℝ) : MetricFn 4 := fun x =>
               ![0, 0, (x 1) ^ 2, 0],
               ![0, 0, 0, (x 1) ^ 2 * Real.sin (x 2) ^ 2]]
 
-/-- The Ricci tensor of the ingoing Vaidya metric written as a table indexed `[b][d]`: rank one
+/-- The Ricci tensor of the ingoing Vaidya metric written as a table indexed `[b][d]`: rank at most one
 and null, with the single nonzero entry `R_{vv} = 2 m′(v)/r²`. -/
 noncomputable def vRicci (m₁ : ℝ → ℝ) (x : Fin 4 → ℝ) : Fin 4 → Fin 4 → ℝ :=
   ![![2 * m₁ (x 0) / (x 1) ^ 2, 0, 0, 0],
@@ -434,7 +434,7 @@ noncomputable def vRicci (m₁ : ℝ → ℝ) (x : Fin 4 → ℝ) : Fin 4 → Fi
     ![0, 0, 0, 0],
     ![0, 0, 0, 0]]
 
-/-- **The Vaidya Ricci tensor is rank-one null dust**:
+/-- **The Vaidya Ricci tensor is rank-at-most-one null dust (rank one wherever m′(v) ≠ 0)**:
 `R_{μν} = (2 m′(v)/r²) δ^v_μ δ^v_ν`, for an arbitrary once-differentiable mass function.
 
 The hypothesis is `HasDerivAt m (m₁ s) s` near `v` — first derivative only.  No second

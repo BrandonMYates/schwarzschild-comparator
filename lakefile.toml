@@ -12,7 +12,7 @@ rev = "v4.32.0"
 [[require]]
 name = "GRLab"
 git = "https://github.com/BrandonMYates/grlab.git"
-rev = "0f5b6e19565370cf46fca8847d249e553a872e3b"
+rev = "88aa2e75dc1bb7fb06e33c51c2447acb456edd4a"
 
 [[lean_lib]]
 name = "Challenge"
