@@ -1,124 +1,41 @@
 version: v0.4
 project:
   name: Exact solutions of the vacuum and sourced Einstein field equations, verified in coordinates
-  description: 'This project machine-checks in Lean 4, against Mathlib v4.32.0, that the standard
-    exact solutions of the Einstein field equations do satisfy those equations, computed at the level
-    of coordinate components on a chart. Twenty-one theorems and thirty-three definitions are compared;
-    the compared set is exactly what the Challenge states and comparator.json names, and the supporting
-    library contains further results deliberately not advertised here.
+  description: 'Twenty-one theorems and thirty-three definitions, machine-checked in Lean 4 against
+    Mathlib v4.32.0: the Schwarzschild, Schwarzschild-de Sitter (Kottler), Reissner-Nordstrom (with
+    the Maxwell stress tensor defined and G = 8 pi T proved in all sixteen components), ingoing Vaidya
+    (rank-one null dust, for a merely once-differentiable mass function), spatially flat FLRW (both
+    Friedmann equations in Einstein-tensor form), static de Sitter, Minkowski-in-spherical and Kiselev
+    metrics, together with Birkhoff uniqueness in the areal static gauge and the n != 2 equivalence
+    of the two forms of the vacuum equations.
 
 
-    WHAT IS COMPARED, BY SOLUTION. (III) SCHWARZSCHILD on the exterior chart r > 2M > 0 away from
-    the coordinate poles: R_{mu nu} = 0, G_{mu nu} = 0, R = 0. (IV) SCHWARZSCHILD-DE SITTER (Kottler),
-    f = 1 - 2M/r - Lambda r^2/3: R_{mu nu} = Lambda g_{mu nu}. (V) UNIQUENESS in the areal-radius
-    static spherically symmetric gauge: on an interval avoiding r = 0 the only lapses solving R_{theta
-    theta} = 0 are f = 1 - 2M/r. (VI) REISSNER-NORDSTROM, f = 1 - 2M/r + Q^2/r^2, with the Maxwell
-    sector: the Faraday tensor of the Coulomb field F = (Q/r^2) dt ^ dr and the Maxwell stress tensor
-    T_{mu nu} = (1/4pi)(F_{mu a}F_nu{}^a - (1/4) g_{mu nu} F_{ab}F^{ab}) are both DEFINED, and G_{mu
-    nu} = 8 pi T_{mu nu} is proved in all sixteen components -- the Einstein half of the Einstein-Maxwell
-    system; also F_{ab}F^{ab} = -2Q^2/r^4, R = 0, and R_{theta theta} = Q^2/r^2, nonzero, the falsifier
-    for the Schwarzschild statements. (VII) INGOING VAIDYA, ds^2 = -(1-2m(v)/r)dv^2 + 2 dv dr + r^2
-    dOmega^2, neither static nor diagonal: R_{mu nu} = (2 m''(v)/r^2) delta^v_mu delta^v_nu, rank-one
-    null dust, for an arbitrary ONCE-differentiable mass function; R = 0; and the Einstein-tensor
-    form. (VIII) SPATIALLY FLAT FLRW: both Friedmann equations in Einstein-tensor form, G_tt = 3(adot/a)^2
-    and G_ii = -(2 a addot + adot^2), plus vanishing off-diagonal G. (IX) STATIC DE SITTER, f = 1
-    - r^2/L^2: R_{mu nu} = (3/L^2) g_{mu nu} and R = 12/L^2. (X) MINKOWSKI IN SPHERICAL COORDINATES:
-    Ricci-flat. (XI) KISELEV, f = 1 - 2M/r - c r^{-(3w+1)} with a real exponent: R_{theta theta} =
-    -3wc r^{-(3w+1)}, nonzero for w != 0, and Ricci-flat at w = 0. Part II compares the general fact
-    that licenses calling several of these the same thing: for a symmetric chart-level metric with
-    invertible determinant in dimension n != 2, G vanishes iff Ricci does. Every compared statement,
-    with its exact hypotheses and its scope caveats, is listed one by one under alignment.
+    The results are classical and NO NEW MATHEMATICS IS CLAIMED: this is a proof of concept for the
+    definitions. Lean checks that a proof establishes a statement, not that a definition means what
+    its name says, so the entry certifies its sign, index and contraction conventions by computing
+    textbook solutions with them -- including four NONZERO answers (de Sitter R = 12/L^2, Reissner-Nordstrom
+    R_thetatheta = Q^2/r^2, Vaidya R_vv = 2m''(v)/r^2, Kiselev R_thetatheta = -3wc r^-(3w+1)), because
+    a curvature definition that was accidentally identically zero would still prove every vacuum theorem
+    here.
 
 
-    WHY THIS ENTRY EXISTS. The compared statements are classical -- Schwarzschild (1916), Reissner
-    (1916) and Nordstrom (1918), Kottler (1918), Jebsen (1921) and Birkhoff (1923), Friedmann (1922)
-    and Lemaitre (1927), Vaidya (1951), Kiselev (2003). NO NEW MATHEMATICS IS CLAIMED HERE, and none
-    should be read into this entry. The purpose is a proof of concept, stated as such: to certify
-    that the supporting library''s coordinate-level definitions -- the coordinate partial derivative,
-    the Christoffel symbols, the Riemann and Ricci tensors, the scalar curvature, the Einstein tensor
-    and the Maxwell sector, in the sign and index conventions the Challenge fixes explicitly -- together
-    with its computational method (explicit component calculation with the lapse or mass or scale
-    factor carried as symbolic atoms, cross-checked before any Lean proof against two independent
-    symbolic engines, one of them the author''s validation-gated computer-algebra suite) reproduce
-    the textbook results on solutions whose answers are already known. Lean checks that a proof establishes
-    a statement, not that a definition means what its name says, so a sign, index or contraction convention
-    can be wrong in a way type-checking never detects. Crucially, several compared answers are NONZERO  --
-    de Sitter''s R = 12/L^2, Reissner-Nordstrom''s R_{theta theta} = Q^2/r^2, Vaidya''s R_{vv} = 2m''(v)/r^2,
-    Kiselev''s R_{theta theta} = -3wc r^{-(3w+1)} -- because a curvature definition that was accidentally
-    identically zero would still have proved every vacuum theorem here, and only the nonvanishing
-    ones exclude that. Minkowski in spherical coordinates is included for the mirror-image reason:
-    that chart of FLAT space still has nine nonvanishing entries in its 64-entry Christoffel table,
-    so getting zero there tests cancellation rather than emptiness. Later work in this programme --
-    junction conditions, thin shells, further sourced solutions -- is intended to be stated against
-    these same definitions, which a reader can then trust because they were certified here first.
+    Scope: everything is a computation in ONE FIXED CHART, an open subset of R^4 -- no atlas, no manifold,
+    no coordinate-independence theorem, no maximal extension, and horizons and coordinate poles lie
+    outside every statement. NOT compared: Ricci symmetry R_bd = R_db in general (it needs Clairaut
+    for the coordinate partial derivative, which Mathlib supplies only for fderiv) or the Bianchi
+    identities; Maxwell''s own equations; any matter model, fluid or energy condition beyond the single
+    defined Maxwell stress tensor; non-flat FLRW; the outgoing Vaidya chart.
 
 
-    MATHLIB HAS NO CURVATURE. Grepped case-insensitively across all 8,264 .lean files of Mathlib at
-    revision 81a5d257c8e410db227a6665ed08f64fea08e997 (tag v4.32.0), checked for this entry with positive
-    controls to confirm the grep was running: christoffel, leviCivita, levi_civita, riemannCurvature,
-    curvatureTensor, ricci, scalarCurvature, sectionalCurvature, Lorentzian and PseudoRiemannian each
-    return zero hits. The one metric structure Mathlib does have, RiemannianMetric in Mathlib/Topology/VectorBundle/Riemannian.lean,
-    carries literal positive-definiteness in its pos field and therefore cannot express signature
-    (-,+,+,+); Mathlib/Geometry/Manifold/Riemannian/ contains exactly two files, Basic.lean and PathELength.lean,
-    and the CovariantDerivative directory supplies a connection layer with no curvature and no Levi-Civita
-    existence or uniqueness theorem. The Challenge therefore defines the entire chain inline from
-    Mathlib primitives only -- deriv, Function.update, Finset.sum, Matrix.diagonal, Matrix.of, Matrix.inv,
-    Real.sin, Real.pi, Real.rpow, HasDerivAt, nhds -- with no structures, no typeclasses and no Prop-valued
-    bundling. Each of the thirty-three definitions carries a docstring giving its ordinary mathematical
-    meaning and the textbook equation it implements, and the Solution restates every one of them verbatim
-    with a definitional-equality bridge to the library.
+    Audience: general relativists, for whom this is the definitional layer a junction-condition or
+    thin-shell statement would be written against, and the formalization community, for whom it is
+    coverage-creating rather than coverage-duplicating.
 
 
-    SCOPE, STATED PLAINLY. Everything is a computation in one fixed coordinate chart, an open subset
-    of R^4. There is no atlas, no manifold, no vector bundle, no coordinate-independence theorem,
-    and no claim that the objects defined here transform tensorially. There is no global or maximal
-    extension: horizons and coordinate poles lie outside every compared statement. The uniqueness
-    theorem is NOT Birkhoff''s theorem: staticity, spherical symmetry and the areal gauge are assumed
-    there, whereas the genuine theorem derives staticity from the vacuum equations for a general,
-    possibly time-dependent, spherically symmetric metric. "Vacuum" and "sourced" mean exactly what
-    each statement says, and the meaning differs by Part: for III, V, X and w = 0 of XI, exactly R_{mu
-    nu} = 0; for IV and IX, exactly R_{mu nu} = Lambda g_{mu nu}; for VI a stress-energy tensor IS
-    defined and G = 8 pi T is proved for it, but Maxwell''s own equations are NEITHER STATED NOR USED;
-    for VII and VIII NO stress-energy tensor is defined at all, so "null dust" and "perfect fluid"
-    describe the form of the computed curvature and are not formalized claims about matter. No energy
-    condition appears anywhere. Vaidya is the INGOING Eddington-Finkelstein chart with g_{vr} = +1;
-    FLRW is spatially flat (k = 0) only; Kiselev uses Real.rpow and is stated on r > 0. Nothing here
-    is numerical or asymptotic. Every one of these restrictions is set out in full under fidelity.
-
-
-    ONE LIBRARY LIMITATION, PRE-STATED. The supporting library does NOT prove the symmetry of the
-    Ricci tensor, R_{bd} = R_{db}, in general: that reduces to Clairaut''s theorem for the library''s
-    coordinate partial derivative, Mathlib supplies it only for fderiv, and transporting it was deliberately
-    scoped out. No general symmetry lemma is compared and none is used in any compared proof; for
-    every metric treated, symmetry is instead EXHIBITED, all sixteen Ricci components being computed
-    and the off-diagonal ones shown to vanish. The Bianchi identities are absent for the same reason
-    and are likewise not compared.
-
-
-    AUDIENCE. First, the general-relativity community. Checking the field equations on the standard
-    exact solutions in a kernel-checked proof assistant is the baseline any formal result about spacetime
-    geometry must clear, and until this library there was no Lean vocabulary in which a general-relativity
-    statement could be written at all. The definitional layer certified here is the one a junction-condition
-    or thin-shell statement would be written against -- computations the field currently certifies
-    with computer algebra alone. The Vaidya result is the sharpest case: its mass function need only
-    be C^1, exactly the regularity available when gluing across a radiating shell. Second, the formalization
-    community. Because Mathlib has no curvature of any kind, this entry is coverage-creating rather
-    than coverage-duplicating: it puts the connection coefficients, the Riemann and Ricci tensors,
-    the scalar curvature, the Einstein tensor and the Maxwell stress tensor into Lean in indefinite
-    signature, on static, non-static, diagonal and non-diagonal charts, and the library proves the
-    Christoffel table and the Ricci tensor of the general static spherically symmetric chart for an
-    ARBITRARY lapse, so any spherical lapse instantiates the same theorem.
-
-
-    PROVENANCE AND NOVELTY. The compared results are classical and are formalized here from their
-    standard statements, not translated from any one proof; the relationship recorded for each classical
-    source is therefore independently-proves. No claim of mathematical novelty is made anywhere in
-    this entry. What is asserted, and checked, is that Mathlib contains no curvature content (grepped,
-    above). A targeted search for prior proof-assistant formalizations of curvature in indefinite
-    signature, of the Einstein field equations, or of the Schwarzschild, Reissner-Nordstrom, Vaidya
-    or FLRW solutions -- across Lean, Isabelle/HOL and the AFP, Coq/Rocq, HOL Light, Mizar and Metamath
-    -- found none; the nearest neighbours are recorded under related formalizations. That search was
-    targeted, not exhaustive, and absence from search is not proof that no prior formalization exists.'
+    Mathlib v4.32.0 contains no curvature of any kind -- christoffel, ricci, scalarCurvature, Lorentzian,
+    PseudoRiemannian and five further names return zero hits across all 8,264 .lean files at revision
+    81a5d257c8e410db227a6665ed08f64fea08e997, and its one metric structure hard-codes positive definiteness
+    -- so the entire chain is defined inline in the Challenge.'
   authors:
   - Brandon Yates
   license: Apache-2.0
@@ -128,9 +45,8 @@ repository:
   substantive_formalization:
     id: BrandonMYates/grlab
     revision: 0f5b6e19565370cf46fca8847d249e553a872e3b
-    note: 'Thin wrapper. The Challenge and Solution in this repository state and bridge; the whole
-      proof development lives in the GRLab library named here (seventeen modules, 4,431 lines), which
-      is pinned by commit in lakefile.toml.'
+    note: 'Thin wrapper: the Challenge and Solution state and bridge, and the whole proof development
+      (17 modules, 4,431 lines) lives in the GRLab library named here, pinned by commit in lakefile.toml.'
 classification:
   arxiv:
   - gr-qc
@@ -147,26 +63,11 @@ sources:
 - title: Uber das Gravitationsfeld eines Massenpunktes nach der Einsteinschen Theorie
   authors:
   - Karl Schwarzschild
-  location: Sitzungsberichte der Koniglich Preussischen Akademie der Wissenschaften (Berlin), 1916,
-    pp. 189-196
+  location: Sitzungsber. Preuss. Akad. Wiss. Berlin, 1916, 189-196
   type: paper
   relationship: independently-proves
-  note: 'The paper in which the metric of Part III was introduced, and the source of the result that
-    it solves the vacuum field equations. WHAT IS COMPARED FROM IT: that the metric diag(-(1 - 2M/r),
-    (1 - 2M/r)^{-1}, r^2, r^2 sin^2 theta) has vanishing Ricci tensor, vanishing Einstein tensor and
-    vanishing scalar curvature on the exterior chart. The Lean proof is a direct component computation
-    and is not a translation of Schwarzschild''s derivation, which is why the relationship is recorded
-    as independently-proves rather than formalizes. BIBLIOGRAPHIC NOTE, checked for this entry: the
-    1916 Sitzungsberichte article has NO DOI and NO record in either Crossref or OpenAlex (an OpenAlex
-    title search over 1900-1930 returns count 0). Three confirmable surrogates exist and were verified:
-    the 1992 Springer reprint in the Collected Works, pp. 449-456, doi:10.1007/978-3-642-58084-0_21;
-    the 2003 General Relativity and Gravitation Golden Oldie republication, 35(5), 951-959, doi:10.1023/A:1022971926521;
-    and the English translation deposited as arXiv:physics/9905030 (OpenAlex W1616233161), whose record
-    independently carries volume 1916 and pages 189-196. The editorial note accompanying the Golden
-    Oldie (Antoci and Liebscher, GRG 35(5), 945-950, doi:10.1023/A:1022919909683) is a separate item
-    and is NOT cited here as the primary source. The German title above is written out by hand rather
-    than copied from an API record, because the API records mangle the umlaut.'
-  author_endorsement: not-contacted
+  note: Part III. The original has no DOI and no API record; verified surrogates are the GRG Golden
+    Oldie doi:10.1023/A:1022971926521 and arXiv:physics/9905030. German title written by hand.
 - title: Uber die Eigengravitation des elektrischen Feldes nach der Einsteinschen Theorie
   authors:
   - Hans Reissner
@@ -174,57 +75,16 @@ sources:
   location: Annalen der Physik 355 (1916), no. 9, 106-120
   type: paper
   relationship: independently-proves
-  note: 'The first of the two papers behind the metric of Part VI: the charged spherically symmetric
-    solution, obtained here for a point charge. WHAT IS COMPARED: that the metric with lapse f = 1
-    - 2M/r + Q^2/r^2 satisfies G_{mu nu} = 8 pi T_{mu nu} for the Maxwell stress tensor of the Coulomb
-    field, together with R = 0 and R_{theta theta} = Q^2/r^2. The Lean proof is a direct component
-    computation, not a translation. Bibliographic data verified against Crossref for this entry: author
-    recorded as ''H. Reissner'', Annalen der Physik, volume 355, ISSUE 9, pages 106-120, published-print
-    1916, ISSN 0003-3804 and 1521-3889. FLAG: the issue is recorded as 9, not the ''50'' that appears
-    in the common citation form ''Ann. Phys. 355 (50), 106-120'' -- that 50 is the Band number of
-    the series, not the issue. The German title is written out by hand. NOT CLAIMED: Maxwell''s equations,
-    which this paper of course treats and which are neither stated nor used anywhere in this entry.'
-  author_endorsement: not-contacted
+  note: Part VI, with Nordstrom. Crossref records the issue as 9, not the '50' of the common citation
+    form, which is the Band number; pages 106-120 confirmed. German title by hand.
 - title: On the Energy of the Gravitational Field in Einstein's Theory
   authors:
   - Gunnar Nordstrom
   location: Koninklijke Nederlandsche Akademie van Wetenschappen, Proceedings 20 (1918), 1238-1245
   type: paper
   relationship: independently-proves
-  note: 'The second of the two papers behind the metric of Part VI, and the reason the solution carries
-    two names. Same compared content as the Reissner entry. BIBLIOGRAPHIC NOTE, checked for this entry:
-    this paper has NO DOI and NO Crossref record. It does have an OpenAlex record -- author Gunnar
-    Nordstrom, 1918, Koninklijke Nederlandse Akademie van Wetenschappen Proceedings, volume 20, pages
-    1238-1245 -- but that record carries NO DOI and its recorded title contains a typo, ''On the Energy
-    of the Gravitation field in Einstein''s Theory'', missing the ''al'' of ''Gravitational''. The
-    title above is written out in its standard form by hand; no identifier is asserted for this source.'
-  author_endorsement: not-contacted
-- title: Zur Gravitationstheorie
-  authors:
-  - Hermann Weyl
-  id: https://doi.org/10.1002/andp.19173591804
-  location: Annalen der Physik 359 (1917), no. 18, 117-145
-  type: paper
-  relationship: background
-  note: 'Weyl is frequently named alongside Reissner and Nordstrom as a co-discoverer of the charged
-    spherically symmetric solution. Recorded as background rather than independently-proves because
-    this entry takes no position on the priority ordering and none of its content is used in any proof.
-    Bibliographic data verified against Crossref for this entry: Hermann Weyl, Annalen der Physik,
-    volume 359, issue 18, pages 117-145, 1917. The German title is written out by hand.'
-  author_endorsement: not-contacted
-- title: The field of an electron on Einstein's theory of gravitation
-  authors:
-  - George Barker Jeffery
-  id: https://doi.org/10.1098/rspa.1921.0028
-  location: Proceedings of the Royal Society of London A 99 (1921), no. 697, 123-134
-  type: paper
-  relationship: background
-  note: 'The fourth name usually attached to the charged spherically symmetric solution. Recorded
-    as background for the same reason as the Weyl entry: this entry takes no position on priority
-    and uses none of its content. Bibliographic data verified against Crossref for this entry: George
-    Barker Jeffery, Proc. R. Soc. Lond. Series A, volume 99, issue 697, pages 123-134, issued 1921-05-02.
-    FLAG: the recorded title uses a typographic apostrophe in ''Einstein''s''; it is normalised here.'
-  author_endorsement: not-contacted
+  note: Part VI, with Reissner. No DOI and no Crossref record; the OpenAlex record has a typo in the
+    title, so no identifier is asserted and the citation is given by hand.
 - title: Uber die physikalischen Grundlagen der Einsteinschen Gravitationstheorie
   authors:
   - Friedrich Kottler
@@ -232,110 +92,36 @@ sources:
   location: Annalen der Physik 361 (1918), no. 14, 401-462
   type: paper
   relationship: independently-proves
-  note: 'The origin of the Schwarzschild-de Sitter (Kottler) metric with lapse f = 1 - 2M/r - Lambda
-    r^2/3, compared here as the Einstein-space statement R_{mu nu} = Lambda g_{mu nu} (Part IV). As
-    with Schwarzschild, the Lean proof is a direct component computation rather than a translation
-    of the original derivation. Bibliographic data verified against Crossref and OpenAlex for this
-    entry: title, author recorded as Friedrich Kottler (given name in full), Annalen der Physik, volume
-    361, issue 14, pages 401-462, published-print 1918, publisher Wiley, ISSN 0003-3804 and 1521-3889.
-    The German title is written out by hand.'
-  author_endorsement: not-contacted
+  note: Part IV, the Schwarzschild-de Sitter metric. Crossref verified in full. German title written
+    by hand because the API record mangles the umlaut.
 - title: Uber die allgemeinen kugelsymmetrischen Losungen der Einsteinschen Gravitationsgleichungen
     im Vakuum
   authors:
   - Jorg Tofte Jebsen
   id: https://doi.org/10.1007/s10714-005-0168-y
-  location: Arkiv for Matematik, Astronomi och Fysik 15 (1921), no. 18; reprinted in English translation
-    as General Relativity and Gravitation 37 (2005), no. 12, 2253-2259
+  location: Ark. Mat. Ast. Fys. 15 (1921), no. 18; transl. Gen. Relativ. Gravit. 37 (2005), 2253-2259
   type: paper
   relationship: independently-proves
-  note: 'The earliest statement of what is now called Birkhoff''s theorem, two years before Birkhoff.
-    Cited alongside Birkhoff for the uniqueness result of Part V, and named first because it has priority.
-    BIBLIOGRAPHIC NOTE, checked for this entry: the 1921 Arkiv original has NO Crossref record and
-    only a DOI-less OpenAlex stub (W3025852109) whose primary_location source is null -- the journal
-    is not recorded at all -- and whose biblio field gives first_page 18, a mis-parse of ''nr. 18''
-    and not a page range. The DOI above is therefore the 2005 GRG English-translation reprint, verified
-    against Crossref: J. T. Jebsen, General Relativity and Gravitation, volume 37, issue 12, pages
-    2253-2259, issued 2005-11-22. WHAT IS COMPARED, AND THE GAUGE RESTRICTION: only the calculus core
-    in the areal-radius static spherically symmetric gauge. Jebsen''s and Birkhoff''s theorem DERIVES
-    staticity from the vacuum equations for a general spherically symmetric metric; the compared statement
-    ASSUMES it, along with the areal radial coordinate and the reciprocal lapse/radial-metric pair,
-    and proves only that under those assumptions the vacuum equation forces f = 1 - 2M/r. That is
-    a strictly weaker statement than the source''s and is labelled as such in the Challenge docstring.
-    The Norwegian author''s name is written out by hand.'
-  author_endorsement: not-contacted
+  note: Part V, and the priority holder over Birkhoff. The 1921 original has no usable record, so
+    the DOI is the 2005 translation. Only the areal static gauge is compared, which is strictly weaker.
 - title: Relativity and Modern Physics
   authors:
   - George David Birkhoff
   id: https://doi.org/10.4159/harvard.9780674734487
-  location: Harvard University Press, Cambridge, MA, 1923, xi + 283 pp.
+  location: Harvard University Press, Cambridge MA, 1923
   type: book
   relationship: independently-proves
-  note: 'The book in which the uniqueness theorem for spherically symmetric vacuum solutions became
-    widely known, and the name under which the result of Part V is normally cited. The gauge restriction
-    described in the Jebsen entry applies identically here: what is compared is strictly weaker than
-    the theorem, because staticity is assumed rather than derived. BIBLIOGRAPHIC NOTE, checked for
-    this entry and flagged deliberately: the Crossref record at the DOI above is stamped 1927, not
-    1923, and records Rudolph Ernest Langer as an additional author; OpenAlex (W1966021391) mirrors
-    the 1927 date. The 1927 stamp appears to be a Harvard University Press digital-backlist placeholder.
-    The 1923 date used here is independently attested inside Crossref by a contemporaneous review,
-    L. P. Eisenhart, Science 58 (1923-12-28), 539-541, doi:10.1126/science.58.1513.539, whose recorded
-    title reads ''Relativity and Modern Physics. By G. D. Birkhoff, Cambridge, Harvard University
-    Press, 1923. xi + 283 pp.'' The year is cited deliberately against the DOI record rather than
-    silently taken from it.'
-  author_endorsement: not-contacted
-- title: On the discovery of Birkhoff's theorem
-  authors:
-  - Nils Voje Johansen
-  - Finn Ravndal
-  id: https://doi.org/10.1007/s10714-006-0242-0
-  location: General Relativity and Gravitation 38 (2006), no. 3, 537-540
-  type: paper
-  relationship: background
-  note: The priority history establishing that Jebsen (1921) preceded Birkhoff (1923). Cited to justify
-    naming Jebsen first and to make the attribution in this entry checkable rather than conventional.
-    No result of this paper is used in any proof. Bibliographic data verified against Crossref and
-    OpenAlex for this entry.
-  author_endorsement: not-contacted
+  note: Part V. The Crossref record is stamped 1927 with an extra author; 1923 is attested by Eisenhart's
+    review, doi:10.1126/science.58.1513.539. Staticity is assumed here, not derived.
 - title: The gravitational field of a radiating star
   authors:
   - P. C. Vaidya
   id: https://doi.org/10.1007/bf03173260
-  location: Proceedings of the Indian Academy of Sciences, Section A 33 (1951), no. 5, 264-276; reprinted
-    as General Relativity and Gravitation 31 (1999), no. 1, 121-135, doi:10.1023/A:1018875606950
+  location: Proc. Indian Acad. Sci. A 33 (1951), no. 5; repr. Gen. Relativ. Gravit. 31 (1999), 121-135
   type: paper
   relationship: independently-proves
-  note: 'The origin of the radiating-star metric of Part VII. WHAT IS COMPARED: that the ingoing Eddington-Finkelstein
-    form ds^2 = -(1 - 2m(v)/r) dv^2 + 2 dv dr + r^2 dOmega^2 has Ricci tensor (2 m''(v)/r^2) delta^v_mu
-    delta^v_nu -- rank one and null -- with vanishing scalar curvature, and the corresponding Einstein-tensor
-    form; for an arbitrary once-differentiable mass function. The Lean proof is a direct component
-    computation, not a translation. BIBLIOGRAPHIC NOTE, checked for this entry: the 1951 original
-    DOES have a DOI, verified against Crossref -- 10.1007/bf03173260, P. C. Vaidya, Proceedings of
-    the Indian Academy of Sciences - Section A, volume 33, issue 5, dated 1951-05, ISSN 0370-0089
-    -- but the Crossref record carries NO page range, so the pages 264-276 above are from the standard
-    citation and are not API-confirmed. The 1999 General Relativity and Gravitation Golden Oldie reprint
-    was verified separately: ''The Gravitational Field of a Radiating Star'', P. C. Vaidya, GRG volume
-    31, issue 1, pages 121-135, 1999, doi:10.1023/A:1018875606950; the 121-135 page range is confirmed
-    by both Crossref and OpenAlex. FLAG, so it is not mistaken for the reprint: a companion item sits
-    immediately before it in the same issue -- Vaidya, ''The External Field of a Radiating Star in
-    General Relativity'', GRG 31 (1999) 119-120, doi:10.1023/A:1018871522880 -- and that is a separate
-    short piece, not the Golden Oldie, and is deliberately not cited here.'
-  author_endorsement: not-contacted
-- title: 'A Relativist''s Toolkit: The Mathematics of Black-Hole Mechanics'
-  authors:
-  - Eric Poisson
-  id: https://doi.org/10.1017/CBO9780511606601
-  location: Cambridge University Press, Cambridge, 2004
-  type: book
-  relationship: background
-  note: 'The modern reference whose section 4.3 gives the Vaidya Christoffel and Ricci tables in the
-    ingoing chart, in the form the compared statement of Part VII takes (its equation 4.35). Cited
-    for the statement of the result and for the chart conventions; no proof in this entry is a translation
-    of its argument, and no other result of the book is used. Bibliographic data verified against
-    Crossref for this entry: Eric Poisson, Cambridge University Press, monograph, 2004, ISBN 9780511606601.
-    FLAG: the Crossref record renders the apostrophe in the title as the HTML entity ''&#39;''; it
-    is normalised here.'
-  author_endorsement: not-contacted
+  note: Part VII. The 1951 DOI carries no page range; the reprint is GRG 31 (1999) 121-135, doi:10.1023/A:1018875606950,
+    confirmed by both APIs, and is not the 119-120 companion piece.
 - title: Uber die Krummung des Raumes
   authors:
   - Alexander Friedmann
@@ -343,88 +129,28 @@ sources:
   location: Zeitschrift fur Physik 10 (1922), no. 1, 377-386
   type: paper
   relationship: independently-proves
-  note: 'The origin of the expanding-universe solutions of Part VIII. WHAT IS COMPARED: the two Friedmann
-    equations in Einstein-tensor form for the spatially flat metric, G_tt = 3(adot/a)^2 and G_ii =
-    -(2 a addot + adot^2), together with the vanishing of every off-diagonal component. The compared
-    statements are about the Einstein tensor of the metric only; no fluid is defined and the equations
-    in their usual matter-coupled form are not stated. BIBLIOGRAPHIC NOTE, checked for this entry
-    and flagged: the Crossref record for this DOI is CORRUPTED IN TWO WAYS. First, its recorded title
-    and container come back mojibaked -- the umlauts are replaced by replacement characters, so the
-    title reads as garbage and the journal as ''Zeitschrift f?r Physik''. Second, the recorded author
-    is ''A. Friedman'', with one n, not Friedmann. The volume 10, issue 1, pages 377-386 and the date
-    1922-12 are recorded correctly and are confirmed. The title and the author''s name above are therefore
-    written out by hand from the standard citation, NOT copied from the API. The same mojibake affects
-    the 1924 companion paper (doi:10.1007/BF01328280, ''Uber die Moglichkeit einer Welt mit konstanter
-    negativer Krummung des Raumes'', Z. Phys. 21 (1924), no. 1, 326-332, verified, author there correctly
-    recorded as ''A. Friedmann''), and the 1999 GRG English translation (''On the Curvature of Space'',
-    GRG 31 (1999), no. 12, 1991-2000, doi:10.1023/A:1026751225741, verified) again records the author
-    as ''A. Friedman''.'
-  author_endorsement: not-contacted
+  note: Part VIII, with Lemaitre. The Crossref record is mojibaked and names the author 'A. Friedman';
+    the title and the name are written by hand from the standard citation.
 - title: Un Univers homogene de masse constante et de rayon croissant rendant compte de la vitesse
     radiale des nebuleuses extra-galactiques
   authors:
   - Georges Lemaitre
   id: https://doi.org/10.1093/mnras/91.5.483
-  location: Annales de la Societe Scientifique de Bruxelles A47 (1927), 49-59; English translation,
-    A Homogeneous Universe of Constant Mass and Increasing Radius accounting for the Radial Velocity
-    of Extra-galactic Nebulae, Monthly Notices of the Royal Astronomical Society 91 (1931), no. 5,
+  location: Ann. Soc. Sci. Bruxelles A47 (1927), 49-59; transl. Mon. Not. R. Astron. Soc. 91 (1931),
     483-490
   type: paper
   relationship: independently-proves
-  note: 'The independent rediscovery of the expanding-universe solutions, cited alongside Friedmann
-    for Part VIII; same compared content as the Friedmann entry. BIBLIOGRAPHIC NOTE, checked for this
-    entry: the 1927 Annales de la Societe Scientifique de Bruxelles original has NO record in either
-    Crossref or OpenAlex -- targeted searches in both return only unrelated items -- so no identifier
-    is asserted for it and the citation above is from the standard reference. The DOI given is the
-    1931 MNRAS English translation, verified against Crossref: Monthly Notices of the Royal Astronomical
-    Society, volume 91, issue 5, pages 483-490, issued 1931-03-13, ISSN 0035-8711 and 1365-2966, with
-    the title recorded exactly as reproduced above including its lowercase ''accounting''. FLAG: the
-    Crossref record renders the author as ''A. G. Lematre'' -- the circumflex i is dropped -- so the
-    name above is written out by hand as Lemaitre.'
-  author_endorsement: not-contacted
-- title: Kinematics and World-Structure
-  authors:
-  - Howard Percy Robertson
-  id: https://doi.org/10.1086/143681
-  location: The Astrophysical Journal 82 (1935), 284; continued as Kinematics and World-Structure
-    II, ApJ 83 (1936), 187, doi:10.1086/143716, and III, ApJ 83 (1936), 257, doi:10.1086/143726
-  type: paper
-  relationship: background
-  note: 'With Walker, the geometric characterisation of the homogeneous isotropic metric that gives
-    the FLRW family its last two letters. Recorded as background rather than independently-proves
-    because what is compared in Part VIII is the curvature of the spatially flat metric, not the classification
-    theorem that singles that metric out, and no content of these papers is used in any proof. Bibliographic
-    data for all three parts verified against Crossref for this entry: H. P. Robertson, The Astrophysical
-    Journal, volumes 82 and 83, single-page starts 284, 187 and 257, dated 1935-11, 1936-04 and 1936-05.
-    FLAG: the records carry no issue number and a single start page rather than a range.'
-  author_endorsement: not-contacted
-- title: On Milne's Theory of World-Structure
-  authors:
-  - Arthur Geoffrey Walker
-  id: https://doi.org/10.1112/plms/s2-42.1.90
-  location: Proceedings of the London Mathematical Society s2-42 (1937), no. 1, 90-127
-  type: paper
-  relationship: background
-  note: 'The companion to the Robertson papers, recorded as background for the same reason. Bibliographic
-    data verified against Crossref for this entry: A. G. Walker, Proceedings of the London Mathematical
-    Society, volume s2-42, issue 1, pages 90-127, 1937, ISSN 0024-6115. FLAG: the recorded title carries
-    a trailing HTML superscript markup ''<sup>*</sup>'' for a footnote marker; it is stripped here.'
-  author_endorsement: not-contacted
+  note: Part VIII, with Friedmann. The 1927 original has no record in either API, so the DOI is the
+    1931 translation; Crossref drops the circumflex, so the name is written by hand.
 - title: Quintessence and black holes
   authors:
   - V. V. Kiselev
   id: https://doi.org/10.1088/0264-9381/20/6/310
-  location: Classical and Quantum Gravity 20 (2003), no. 6, 1187-1197; preprint arXiv:gr-qc/0210040
+  location: Classical and Quantum Gravity 20 (2003), no. 6, 1187-1197
   type: paper
   relationship: independently-proves
-  note: 'The origin of the quintessence lapse f = 1 - 2M/r - c r^{-(3w+1)} of Part XI. WHAT IS COMPARED:
-    the theta-theta Ricci component R_{theta theta} = -3wc r^{-(3w+1)}, nonzero whenever w and c are,
-    and Ricci-flatness in the dust case w = 0. Nothing about the physical status of quintessence is
-    claimed, and the paper''s own matter interpretation is not formalized. Bibliographic data verified
-    against Crossref for this entry: title ''Quintessence and black holes'', author recorded as ''V
-    V Kiselev'' without periods, Classical and Quantum Gravity, volume 20, issue 6, pages 1187-1197,
-    issued 2003-03-21, ISSN 0264-9381. The author string is normalised here.'
-  author_endorsement: not-contacted
+  note: Part XI. Crossref verified in full. Only the theta-theta Ricci component and the w = 0 dust
+    case are compared; the degenerations at w = 1/3 and w = -1 are noted in prose, not compared.
 - title: General Relativity
   authors:
   - Robert M. Wald
@@ -432,175 +158,53 @@ sources:
   location: University of Chicago Press, Chicago, 1984
   type: book
   relationship: background
-  note: 'The primary convention reference. The Christoffel formula compared here is Wald (3.1.30),
-    the Riemann tensor is Wald (3.2.3) including the overall sign, and the Maxwell stress tensor is
-    Wald (6.5.4). Cited for the conventions only; no theorem of this book is used in any proof, and
-    in particular the manifold-level development it gives is precisely what this entry does NOT formalize.
-    Bibliographic data verified against Crossref and OpenAlex for this entry: Robert M. Wald, University
-    of Chicago Press, monograph, issued 1984, ISBNs 9780226870335, 9780226870328, 9780226870373.'
-  author_endorsement: not-contacted
-- title: Gravitation
+  note: 'Conventions only: Christoffel (3.1.30), Riemann (3.2.3) including the overall sign, Maxwell
+    stress (6.5.4). No theorem of the book is used in any proof.'
+- title: 'A Relativist''s Toolkit: The Mathematics of Black-Hole Mechanics'
   authors:
-  - Charles W. Misner
-  - Kip S. Thorne
-  - John Archibald Wheeler
-  location: W. H. Freeman, San Francisco, 1973
+  - Eric Poisson
+  id: https://doi.org/10.1017/CBO9780511606601
+  location: Cambridge University Press, Cambridge, 2004
   type: book
   relationship: background
-  note: 'A second convention reference: the Christoffel formula compared here is MTW (8.24) and the
-    Maxwell stress tensor MTW (5.6). Cited for the conventions only; no theorem of this book is used.
-    BIBLIOGRAPHIC NOTE, checked for this entry: the book itself has NO record in either Crossref or
-    OpenAlex -- ISBN filters for both the 1973 Freeman and the 2017 Princeton reissue return zero
-    results, and neither an author-plus-title search nor a year-restricted title search surfaces a
-    book record. Only reviews exist. One of those reviews is a trap and is flagged so that it is not
-    mistaken for the book: Crossref lists doi:10.1063/1.3128805 (Physics Today, 1974) with authors
-    ''C. W. Misner, K. S. Thorne, J. A. Wheeler, S. Chandrasekhar'', but that item is Chandrasekhar''s
-    REVIEW, not the book, and it is deliberately not cited here. No DOI is given for this source because
-    none exists.'
-  author_endorsement: not-contacted
+  note: Section 4.3 gives the ingoing Vaidya tables in the form the Part VII statement takes (eq.
+    4.35). Cited for the statement form only; no proof here follows its argument.
 - title: 'Spacetime and Geometry: An Introduction to General Relativity'
   authors:
   - Sean M. Carroll
   id: https://doi.org/10.1017/9781108770385
-  location: Cambridge University Press, Cambridge, 2019 (originally Addison-Wesley, San Francisco,
-    2004)
+  location: Cambridge University Press, Cambridge, 2019 (orig. Addison-Wesley, 2004)
   type: book
   relationship: background
-  note: 'A third convention reference: the Christoffel formula is Carroll (3.27), the Riemann tensor
-    Carroll (3.66), and the FLRW Ricci and Friedmann expressions compared in Part VIII are Carroll
-    (8.36), (8.67) and (8.68). Cited for the conventions and for the form of those statements; no
-    proof here is a translation of its argument. BIBLIOGRAPHIC NOTE, checked for this entry: the 2019
-    Cambridge University Press edition is the only one with a DOI. Crossref records title ''Spacetime
-    and Geometry'' with the subtitle recorded separately, Sean M. Carroll, Cambridge University Press,
-    monograph, published 2019-07-31, ISBN 9781108488396 print and 9781108770385 electronic. The 2004
-    Addison-Wesley edition has NO Crossref record (an ISBN filter returns zero results) and only a
-    DOI-less OpenAlex stub, W1667086166, harvested from a library-catalogue feed, which records the
-    year as 2003 and the type as article rather than book; that stub is not cited as an identifier
-    here. The DOI above is the 2019 reissue and is labelled as such.'
-  author_endorsement: not-contacted
+  note: The Friedmann expressions compared in Part VIII are Carroll (8.67) and (8.68); also a conventions
+    reference. Only the 2019 reissue has a DOI; the 2004 edition has none.
 related_formalizations:
 - id: https://github.com/leanprover-community/mathlib4
   relationship: independent
-  note: 'Mathlib supplies everything this entry builds on: deriv, HasDerivAt and the one-variable
-    calculus API, fderiv and second_derivative_symmetric, Real.rpow, Function.update, Finset.sum,
-    the Matrix inverse/determinant/diagonal machinery, Fin.sum_univ_four, Convex.norm_image_sub_le_of_norm_hasDerivWithin_le,
-    and the real analysis used in the statements. Mathlib contains NO CURVATURE OF ANY KIND: grepped
-    case-insensitively across all 8,264 .lean files at revision 81a5d257c8e410db227a6665ed08f64fea08e997
-    (tag v4.32.0), checked for this entry with positive controls to confirm the grep was running,
-    christoffel, leviCivita, levi_civita, riemannCurvature, curvatureTensor, ricci, scalarCurvature,
-    sectionalCurvature, Lorentzian and PseudoRiemannian each return zero hit lines. Mathlib/Geometry/Manifold/Riemannian/
-    contains exactly two files, Basic.lean and PathELength.lean; Mathlib/Geometry/Manifold/VectorBundle/CovariantDerivative/
-    supplies a connection layer (IsCovariantDerivativeOn, CovariantDerivative.torsion, IsMetricCompatible)
-    with no curvature and no Levi-Civita existence or uniqueness theorem; and RiemannianMetric in
-    Mathlib/Topology/VectorBundle/Riemannian.lean hard-codes positive-definiteness in its pos field
-    (read directly for this entry: ''pos (b : B) (v : E b) (hv : v != 0) : 0 < inner b v v''), so
-    it cannot carry signature (-,+,+,+). The curvature chain is therefore defined in the Challenge
-    and proved about in the supporting library.'
+  note: 'Supplies deriv/HasDerivAt, fderiv, rpow and the Matrix machinery. Contains NO curvature:
+    ten names grepped at the pinned revision, zero hits; RiemannianMetric is positive-definite only.'
 - id: https://arxiv.org/abs/2608.21502
   relationship: independent
-  note: 'Chow, Liao and Qin, ''A Lean Formalization of Hamilton''s Three-Manifold Theorem'' (2026-08-21).
-    The nearest prior work found anywhere in the sweep: it builds Riemannian tensor calculus, the
-    Levi-Civita connection and Ricci-flow evolution equations in Lean 4. It is nevertheless disjoint
-    from this entry, because it works in POSITIVE-DEFINITE Riemannian signature for Ricci flow, whereas
-    everything here is indefinite (Lorentzian) signature; it contains no Einstein field equations
-    and no exact solution of them. Its abstract was read; its source was not, so its internal API
-    is not confirmed here beyond the abstract.'
+  note: 'Chow, Liao and Qin, Hamilton''s three-manifold theorem in Lean 4. Real curvature machinery,
+    but positive-definite Riemannian for Ricci flow: no field equations, no exact solutions.'
 - id: https://arxiv.org/abs/2405.08863
   relationship: independent
-  note: 'Tooby-Smith, ''HepLean: Digitalising high energy physics'' (2024), the project now developed
-    as PhysLean (github.com/HEPLean/PhysLean). Its Relativity directory is entirely SPECIAL-relativistic
-    -- Lorentz group and algebra, spinors, Clifford algebra, the Minkowski matrix, flat-space tensor
-    index notation -- with no metric field, no Christoffel symbols and no curvature tensors. Its Cosmology/FLRW
-    directory was read directly and is the sharpest point of contact with this entry: it defines a
-    spatial-geometry inductive and POSITS the two Friedmann equations as a definition of physical
-    validity; it does NOT derive them from a metric, and it contains no metric tensor, Christoffel
-    symbols or curvature tensors, with its Dynamics module a stub. Part VIII of this entry derives
-    the Friedmann equations, in Einstein-tensor form, from the FLRW metric through the full curvature
-    chain. The two are therefore complementary rather than overlapping.'
+  note: HepLean/PhysLean. Its Relativity directory is special-relativistic only, and Cosmology/FLRW
+    POSITS the Friedmann equations as a definition with no metric or curvature tensors; Part VIII
+    derives them.
 - id: https://www.isa-afp.org/entries/No_FTL_observers_Gen_Rel.html
   relationship: independent
-  note: 'Stannett, Higgins, Andreka, Madarasz, Nemeti and Szekely, ''No Faster-Than-Light Observers
-    (GenRel)'', Archive of Formal Proofs, 2023-03-05 (Isabelle/HOL). The closest-named prior art and,
-    on inspection, not differential geometry at all: GenRel there is a FIRST-ORDER AXIOMATIC theory
-    of general relativity (sorts, points, worldviews, cones, vectors), with no metric tensor, no Christoffel
-    symbols, no Riemann or Ricci tensor, no field equations and no exact solutions. Disjoint. Its
-    special-relativistic predecessor (Stannett and Nemeti, AFP 2016-04-28; arXiv:1211.6468) and the
-    related ''Halting Problem is Soluble in Malament-Hogarth Spacetimes'' (Stannett, AFP 2023-04-29)
-    sit in the same axiomatic lineage and are disjoint for the same reason.'
-- id: https://www.isa-afp.org/entries/Schutz_Spacetime.html
-  relationship: independent
-  note: 'Schmoetten, Palmer and Fleuriot, ''Schutz'' Independent Axioms for Minkowski Spacetime'',
-    Archive of Formal Proofs, 2021-07-27 (Isabelle/HOL; paper arXiv:2108.10868). An axiomatization
-    of FLAT Minkowski spacetime in the style of Schutz: no curvature, no field equations, no exact
-    solutions. Disjoint.'
-- id: https://www.isa-afp.org/entries/Smooth_Manifolds.html
-  relationship: independent
-  note: Immler and Zhan, 'Smooth Manifolds', Archive of Formal Proofs, 2018-10-22 (Isabelle/HOL).
-    Charts, differentiable manifolds, tangent and cotangent spaces, partitions of unity, spheres and
-    projective space. Confirmed against its theory list to contain NO Riemannian or pseudo-Riemannian
-    metric, no connection and no curvature. Foundational and disjoint. The same line continues in
-    Schmoetten and Fleuriot, 'Lie Groups and Algebras' (AFP 2024-07-31; arXiv:2407.19211), which likewise
-    has no metric and no curvature.
-- id: https://openalex.org/W3126633494
-  relationship: independent
-  note: 'Lu, ''A Formalization of Elements of Special Relativity in Coq'' (2017). First-order axiomatic
-    special relativity in Coq, explicitly introductory. No curvature, no field equations. Disjoint.
-    Two dedicated OpenAlex sweeps found NO Coq/Rocq formalization of tensor calculus, curvature or
-    general relativity; targeted queries likewise found nothing on point in HOL Light, Mizar or Metamath.
-    Extending the sweep to the specific solutions compared here changed nothing: NO proof-assistant
-    formalization of the Reissner-Nordstrom solution, of the Vaidya solution, or of the Friedmann
-    equations DERIVED from a metric was found in any system -- PhysLean posits the Friedmann equations
-    rather than deriving them, and nothing at all was found for Reissner-Nordstrom or Vaidya. As everywhere
-    in this entry, the sweep was targeted, not exhaustive, and absence from search is not proof of
-    absence.'
-- id: https://arxiv.org/abs/hep-th/0701238
-  relationship: independent
-  note: 'Peeters, ''Cadabra: a field-theory motivated symbolic computer algebra system'' (2007), listed
-    as the representative of the technology this entry is NOT an instance of. Cadabra, xAct/xTras
-    (Nutma, 2014), EinsteinPy (arXiv:2005.11288), GRTensorII and GRjunction (Musgrave and Lake, arXiv:gr-qc/9510052)
-    all compute Schwarzschild, Reissner-Nordstrom, Vaidya and FLRW curvature routinely and are the
-    incumbent tools in general relativity, but NONE is a proof assistant: none produces a kernel-checked
-    proof term, and none is prior art for a formalization. They are recorded here for honesty about
-    the state of the art, not as related formalizations in the Palomar sense. Note also that a search
-    of the arXiv API for cat:gr-qc AND all:''theorem prover'' returns zero results in total: there
-    is no proof-assistant literature filed under gr-qc at all.'
+  note: 'Stannett et al., first-order axiomatic general relativity in Isabelle: no metric tensor,
+    no curvature, no field equations. The search was targeted, not exhaustive; absence is not proof
+    of novelty.'
 status:
   scope: 'PROVED: the twenty-one compared theorems, unconditionally, under exactly the hypotheses
-    shown in their statements. Schwarzschild: Ricci-flatness, vanishing Einstein tensor and vanishing
-    scalar curvature at every point of {r > 0, r > 2M, sin(theta) != 0}, for every real M. General
-    chart-level metrics: the equivalence of the two forms of the vacuum equations where the metric
-    is symmetric and its determinant a unit, in every dimension n != 2. Schwarzschild-de Sitter: R_{mu
-    nu} = Lambda g_{mu nu} where r != 0, sin(theta) != 0 and the lapse and radius are nonzero on a
-    neighbourhood of r. Uniqueness: on any open interval avoiding r = 0, every differentiable lapse
-    with 1 - f - r f'' = 0 throughout equals 1 - 2M/r for one constant M. Reissner-Nordstrom: R_{theta
-    theta} = Q^2/r^2, R = 0, F_{ab}F^{ab} = -2Q^2/r^4, and G_{mu nu} = 8 pi T_{mu nu} in all sixteen
-    components on {r > 0, f != 0, sin(theta) != 0}, for the Maxwell stress tensor of the Coulomb field
-    as defined in the Challenge. Vaidya: R_{mu nu} = (2m''(v)/r^2) delta^v_mu delta^v_nu, R = 0, and
-    the Einstein-tensor form, wherever r is nonzero near r, sin(theta) != 0, and m has a derivative
-    m_1 near v -- FIRST derivative only. Flat FLRW: G_tt = 3(adot/a)^2, G_ii = -(2 a addot + adot^2)
-    for each spatial i, and G_{bd} = 0 for b != d, wherever a is nonzero and twice differentiable
-    near t. Static de Sitter: R_{mu nu} = (3/L^2) g_{mu nu} and R = 12/L^2 on {r > 0, f != 0, sin(theta)
-    != 0} for L != 0. Minkowski in spherical coordinates: Ricci-flat wherever r != 0 and sin(theta)
-    != 0. Kiselev: R_{theta theta} = -3wc r^{-(3w+1)} and, at w = 0, Ricci-flatness, on r > 0 with
-    the lapse nonzero near r.
-
-
-    NOT PROVED and NOT CLAIMED: any manifold-level, atlas-level or coordinate-independent statement;
-    any tensoriality or transformation law; any global or maximal extension of any chart, and anything
-    at all at a horizon, at r <= 0, or at sin(theta) = 0; Birkhoff''s theorem itself (staticity is
-    assumed, not derived); the symmetry of the Ricci tensor in general (Clairaut for the coordinate
-    partial derivative is missing from the library and no symmetry lemma is compared -- symmetry is
-    exhibited componentwise instead); the first and second Bianchi identities; Maxwell''s equations
-    in any form; any matter model, fluid, or energy condition (the only stress-energy tensor defined
-    anywhere is the Maxwell one of Part VI); non-flat FLRW; the outgoing Vaidya chart; the Kiselev
-    degenerations at w = 1/3 and w = -1 (recorded in prose, not compared); the Kretschmann scalar
-    or any curvature invariant beyond the scalar curvature; any geodesic, causal-structure, horizon
-    or singularity-theorem statement; and every other result in the supporting library that is not
-    named in comparator.json.
-
-
-    This entry is a proof of concept for the definitional layer, not a claim of new mathematics. The
-    compared results are classical.'
+    shown: chart-local, on the stated open regions, Vaidya needing only a C^1 mass function. NOT PROVED
+    and NOT CLAIMED: any manifold-level or coordinate-independent claim; any maximal extension; anything
+    at a horizon or pole; Birkhoff''s theorem itself (staticity is assumed); Ricci symmetry in general
+    or the Bianchi identities; Maxwell''s equations; any matter model, fluid or energy condition beyond
+    the defined Maxwell tensor; non-flat FLRW; the outgoing Vaidya chart; every library result not
+    in comparator.json.'
   sorry_count: 0
   sorry_in_definitions: 0
   axioms: []
@@ -611,409 +215,158 @@ automation:
     - claude-opus-5
     - claude-fable-5
     framework: Claude Code
-    tool_setup: 'The supporting library (the pinned GRLab repository, seventeen modules and 4,431
-      lines) was produced by a lead agent (claude-opus-5) coordinating worker agents (claude-opus-5)
-      against frozen lemma contracts, under the author''s direction, on Mathlib v4.32.0. Before any
-      Lean proof was attempted, every lemma statement was fixed by two independent symbolic computations
-      that had to agree: a roughly ninety-line re-implementation of the five index formulas in sympy,
-      importing nothing from the author''s suite, and the author''s own computer-algebra curvature
-      engine. Receipts per metric: Reissner-Nordstrom Christoffel 64/64 (13 nonzero), Ricci 16/16
-      (4 nonzero), Einstein 16/16, scalar agrees, 0 mismatches; ingoing Vaidya Christoffel 64/64 (15
-      nonzero), Ricci 16/16 (1 nonzero), 0 mismatches; flat FLRW compared through the chart-independent
-      mixed tensor G^mu_nu, 16/16 agreeing with scalar residual exactly zero; static de Sitter R_{mu
-      nu} - (3/L^2) g_{mu nu} = 0 in all sixteen components with R = 12/L^2; Minkowski-spherical Ricci
-      16/16 zero and Riemann 256/256 zero. For the largest table (the ingoing Vaidya chart, six tables,
-      304 scalar entries) the transcription step was machine-closed as well: a parser reads the Lean
-      array literals back out of the .lean source, translates them to sympy and symbolically diffs
-      every entry against the oracle, reporting 304 entries compared and 0 mismatches, before the
-      proving work was dispatched. Verification (clean rebuild against Mathlib v4.32.0, per-declaration
-      #print axioms over all twenty-one compared theorems and all thirty-three compared definitions,
-      and a scan of the library for sorry, native_decide and axiom declarations) was performed by
-      a separate agent (claude-fable-5), which also wrote the Challenge, the Solution and this metadata.'
+    tool_setup: The library was produced by a lead agent (claude-opus-5) coordinating workers against
+      frozen lemma contracts under the author's direction. Every statement was fixed before any Lean
+      proof by two independent symbolic engines that had to agree -- a standalone sympy re-implementation
+      and the author's computer-algebra suite -- with zero mismatches on each metric; the 304-entry
+      Vaidya tables were additionally diffed against the oracle by parsing the Lean array literals
+      back out of the source.
     cost:
-      wall_time: The supporting library was built on 2026-08-27 in two waves within a single session,
-        with concurrent agents; total campaign wall-clock was not recorded. The comparator (Challenge,
-        Solution, comparator.json and this metadata) was prepared in the same session, including full
-        local builds of the library, the Challenge and the Solution after each wave.
+      wall_time: Two waves in a single session on 2026-08-27; total campaign wall-clock not recorded.
       spend_usd: subscription-based
       hardware: local Apple Silicon machine
-    prompting_notes: 'Seven items on record, each a measured finding rather than a recollection. (1)
-      Mathlib''s ring tactic does NOT fail when it cannot close the goal: it falls back to ring_nf,
-      emits "Try this: [apply] ring_nf" as an info message, and SUCCEEDS as a tactic. A first | ring
-      | <fallback> alternation therefore commits to the ring branch and never reaches any later alternative,
-      leaving a silently unsolved goal that surfaces only as "unsolved goals" at the theorem header.
-      The atomic-failure version ring1 is required. The same hazard has a second form: a bare rw [h]
-      succeeds whenever its pattern is present even if the resulting goal is still open, so in an
-      alternation every (rw [h]; ring1) pair must precede the corresponding bare rw [h]. Both live
-      in the Schwarzschild-de Sitter and Reissner-Nordstrom proofs and cost build cycles there. (2)
-      A t1 <;> t2 <;> t3 chain shares ONE heartbeat budget across every goal it produces. Proving
-      all sixteen Ricci components in a single fin_cases b <;> fin_cases d <;> ... <;> field_simp
-      <;> ring chain timed out at maxHeartbeats 2000000; the identical tactic script split into sixteen
-      separate declarations elaborates the whole set in under fifteen seconds at DEFAULT heartbeats.
-      Separately measured: raising maxHeartbeats made the 64-goal Christoffel table SLOWER (17.7 s
-      at the default 200000 against 34.7 s with a bump), because the limit changes elaborator search
-      depth -- a heartbeat bump is not a free action and should be measured before it is applied.
-      (3) A first | exact ... alternation can commit on a branch that has not actually been solved,
-      because exact may succeed while postponing metavariable elaboration; the alternation then takes
-      a branch whose goal is still open. Force elaboration, or keep the exact outside the alternation.
-      (4) The general Ricci symmetry lemma ricci_symm (R_bd = R_db) was attempted and deliberately
-      abandoned: it reduces to Clairaut''s theorem for the library''s one-variable coordinate partial
-      derivative, Mathlib supplies second_derivative_symmetric only for fderiv, and transporting it
-      through pderiv is a genuine piece of work. It is recorded in the Challenge, in the Solution
-      docstring, in the library README and in this metadata as NOT PROVED and NOT COMPARED; symmetry
-      is exhibited componentwise for each metric instead. (5) The nonvanishing-curvature theorems
-      were added specifically as falsifiers for the definitions, not as additional results: a Ricci
-      definition that was accidentally identically zero would still have proved every vacuum theorem
-      in this entry, so static de Sitter (R = 12/L^2), Reissner-Nordstrom (R_theta theta = Q^2/r^2)
-      and Kiselev (R_theta theta = -3wc r^{-(3w+1)}) are what exclude that, and the sign of the de
-      Sitter scalar additionally pins the overall sign of the curvature convention. (6) The Vaidya
-      module''s C^1 hypothesis is a finding, not a convenience. Enumerating the full v-derivative
-      table of the Christoffel symbols before writing any Lean showed that exactly one entry contains
-      m'''' -- the vv-component of the r-row -- and that the Ricci contraction never reaches it, because
-      it requests only the a = v row and the trace. Implementing a full v-derivative table, which
-      is what the static-spherical module does for the r-direction and therefore the obvious thing
-      to do, would have introduced an m_2 atom and a twice-differentiability hypothesis, silently
-      weakening the theorem. The split into a row lemma and a trace lemma is the fix, and it matters
-      because the physically interesting Vaidya gluings have m of class C^1 but not C^2. (7) An oracle-side
-      trap, recorded because the whole cross-check method rests on the oracle: sympy.simplify FAILED
-      to reduce a Riemann component of FLAT space to zero. Checking Minkowski in spherical coordinates,
-      the component R^r_{phi phi theta} came back as r*(sin(2 theta) tan(theta) + cos(2 theta) - 1)/(2
-      tan(theta)), which is identically zero but which simplify leaves alone; trigsimp(expand_trig(.))
-      reduces it. So a nonzero-looking oracle component is not evidence of nonzero curvature, and
-      the protocol has a false-positive mode: when the oracle reports a single stray nonzero component,
-      re-simplify before believing it. Recorded separately as a near-miss on a frozen contract: a
-      worker brief stated the Kiselev w = 1/3 degeneration as Reissner-Nordstrom with Q^2 = c; the
-      correct identification is Q^2 = -c, and the worker reported the correction rather than proving
-      the brief.'
+    prompting_notes: 'Three findings. (1) Mathlib''s ring does NOT fail when it cannot close a goal
+      -- it falls back to ring_nf and succeeds -- so first | ring | ... commits to a branch leaving
+      the goal open; ring1 is required, and a bare rw and exact carry the same hazard, exact by postponing
+      metavariables. (2) A t1 <;> t2 chain shares one heartbeat budget across every goal: sixteen
+      Ricci components timed out at maxHeartbeats 2000000 in one chain and elaborate in under 15 s
+      as sixteen declarations at the default. (3) sympy.simplify failed to reduce a Riemann component
+      of FLAT space to zero, so the cross-check has a false-positive mode and a stray nonzero component
+      must be re-simplified before it is believed.'
   spend_usd: subscription-based
-  notes: 'Roles, stated separately. Direction: the author, a general-relativity physicist who maintains
-    a validation-gated computer-algebra suite for this programme, set the target statements and their
-    scope, chose which solutions were worth certifying and which results to leave out, directed the
-    work, supplied that suite as one of the two independent oracles against which every lemma statement
-    was fixed before any Lean proof was attempted, and takes responsibility for the submission. Mathematical
-    argument: classical. Schwarzschild (1916), Reissner (1916) and Nordstrom (1918), Kottler (1918),
-    Jebsen (1921) and Birkhoff (1923), Friedmann (1922) and Lemaitre (1927), Vaidya (1951) and Kiselev
-    (2003) are the mathematics being checked, and no step of it originates with this entry. What did
-    not exist beforehand, and was developed by AI agents (Claude Code, claude-opus-5) under the author''s
-    direction, is the Lean proof architecture and the computations themselves: the choice to define
-    the coordinate partial derivative as a one-variable deriv along a coordinate line rather than
-    a component of fderiv; the decision to compute the Ricci tensor of the general static spherically
-    symmetric chart for an arbitrary lapse before specialising to any solution; the row-plus-trace
-    split of the Vaidya v-derivative tables, which was an agent finding -- enumerating the full derivative
-    table showed that the single entry containing m'''' is never reached by the Ricci contraction,
-    so the theorem holds for a merely once-differentiable mass function, where the obvious full-table
-    implementation would have silently required a twice-differentiable one; and the machine-closed
-    transcription check for the 304-entry Vaidya tables, also an agent finding, in which a parser
-    reads the Lean array literals back out of the source and symbolically diffs every entry against
-    the oracle (304 compared, 0 mismatches) so that no human transcription step remains in the chain.
-    Formalization: the same agents, against frozen lemma contracts. Verification: mechanical (Lean''s
-    own elaborator and kernel, a per-declaration #print axioms audit, and Comparator with its second
-    independent kernel at submission time), plus an independent re-verification pass by a separate
-    agent (claude-fable-5) covering clean rebuild, axiom audit over all fifty-four compared declarations,
-    a byte-identity check of every restated declaration against its library counterpart, and a scan
-    of the library for sorry, native_decide and axiom declarations. Communication: the Challenge documentation,
-    the library README and this metadata were drafted by agents and reviewed by the author before
-    submission.'
+  notes: 'Roles, stated separately. Direction: the author set the target statements and their scope,
+    chose what to certify and what to leave out, supplied the validation-gated computer-algebra suite
+    used as one of the two oracles, and takes responsibility for the submission. Mathematical argument:
+    classical, with no step originating here. The Lean proof architecture and the computations were
+    developed by AI agents (Claude Code, claude-opus-5) under the author''s direction, including the
+    row-plus-trace split that keeps the Vaidya theorem C^1 and the machine-closed 304-entry table
+    diff, both agent findings. Formalization: the same agents. Verification: mechanical, plus an independent
+    pass by a separate agent (claude-fable-5). Communication: drafted by agents, reviewed by the author.'
 fidelity:
-  divergences: 'CHART-ONLY, NOT MANIFOLD-LEVEL. A metric here is a matrix-valued function on Fin n
-    -> R, i.e. on an open subset of R^n, and curvature is defined by the literal index formulas on
-    that chart. There is no atlas, no manifold, no vector bundle, no transition-function condition
-    and no coordinate-independence theorem. Nothing in this entry asserts that the compared objects
-    transform as tensors under a change of chart, and no compared statement is invariant in that sense.
-    This is a genuine restriction relative to the textbook sources cited, all of which develop curvature
-    on a manifold; it is stated here rather than absorbed. It is also the form in which junction-condition
-    and thin-shell computations are actually carried out, which is why the scope was chosen.
-
-
-    SIGNATURE AND CONVENTIONS. Signature (-,+,+,+), G = c = 1. Christoffel symbols Gamma^a_{bc} =
-    (1/2) g^{ad}(d_b g_{dc} + d_c g_{db} - d_d g_{bc}); Riemann R^a_{bcd} = d_c Gamma^a_{db} - d_d
-    Gamma^a_{cb} + Gamma^a_{ce} Gamma^e_{db} - Gamma^a_{de} Gamma^e_{cb}; Ricci R_{bd} = R^a_{bad},
-    the contraction on the FIRST and THIRD slots; R = g^{bd} R_{bd}; G_{bd} = R_{bd} - (1/2) R g_{bd};
-    Maxwell stress T_{mu nu} = (1/4 pi)(F_{mu a} F_nu{}^a - (1/4) g_{mu nu} F_{ab} F^{ab}) in Gaussian
-    units. This is the Wald (3.1.30)/(3.2.3) and Carroll (3.27)/(3.66) convention, in which the round
-    sphere and de Sitter space have POSITIVE scalar curvature. The opposite overall sign for the Riemann
-    tensor is also current in the literature and is not the one used here; a reader comparing against
-    a source in the other convention will see sign differences that are not errors. The convention
-    is pinned in Lean from both sides: a constant metric gives vanishing Christoffel symbols and Riemann
-    tensor and eta^{bd} eta_{bd} = 4 fixes the index placement, while the compared static de Sitter
-    theorems exhibit R = +12/L^2, positive, which is de Sitter rather than anti-de Sitter and which
-    would come out negative in the opposite convention.
-
-
-    COORDINATE ORDER DIFFERS BY CHART, DELIBERATELY. For the static spherically symmetric solutions
-    (Parts III, IV, V, VI, IX, X, XI) the coordinates are (t, r, theta, phi) = (x0, x1, x2, x3). For
-    Vaidya (Part VII) they are (v, r, theta, phi), so x0 is the advanced time and the mass function
-    is evaluated at x0. For FLRW (Part VIII) they are Cartesian comoving (t, x, y, z), so x1, x2,
-    x3 are spatial. A reader diffing two Parts must not assume x1 is a radius everywhere.
-
-
-    VAIDYA IS THE INGOING CHART, WITH THE SIGN OF THE CROSS TERM FIXED. Part VII uses ingoing Eddington-Finkelstein
-    coordinates with g_{vr} = g_{rv} = +1, i.e. ds^2 = -(1 - 2m(v)/r) dv^2 + 2 dv dr + r^2 dOmega^2.
-    The outgoing chart, with -2 du dr, is a different metric and is not treated; nothing is claimed
-    about it. The mass function m is required only to be ONCE differentiable near v: the hypothesis
-    is HasDerivAt m (m_1 s) s eventually in the neighbourhood filter, and no compared statement requests
-    a second derivative of m. That is deliberate and is discussed under automation.prompting_notes.
-    Vaidya is also the only compared metric that is neither static nor diagonal, and its inverse has
-    g^{vv} = 0, which is why its scalar curvature vanishes without a computation.
-
-
-    FLRW IS SPATIALLY FLAT ONLY. Part VIII is k = 0, in Cartesian comoving coordinates. The open and
-    closed FLRW charts are not treated and nothing is claimed about them. The Friedmann equations
-    are compared in EINSTEIN-TENSOR form, as statements about components of G for the stated metric.
-    No fluid is defined; H^2 = 8 pi rho / 3 and the acceleration equation follow only after a perfect
-    fluid is posited and coupled through G = 8 pi T, and that step is not formalized.
-
-
-    WHAT "VACUUM" AND "SOURCED" MEAN, PER SOLUTION. Parts III, V, X and the w = 0 case of XI: exactly
-    R_{mu nu} = 0, equivalently G_{mu nu} = 0, as an identity between real numbers at each point of
-    the stated region. Parts IV and IX: exactly R_{mu nu} = Lambda g_{mu nu}, with Lambda = 3/L^2
-    in Part IX; no cosmological-constant term in an action is asserted. Part VI: a stress-energy tensor
-    IS defined -- the Maxwell tensor of the Coulomb field F = (Q/r^2) dt ^ dr -- and G_{mu nu} = 8
-    pi T_{mu nu} is proved for it in all sixteen components. This is the Einstein half of the Einstein-Maxwell
-    system; Maxwell''s own equations, div F = 0 and dF = 0, are NEITHER STATED NOR USED anywhere in
-    this entry or in the supporting library, so "Reissner-Nordstrom solves Einstein-Maxwell" must
-    be read as exactly the identity proved and no more. Parts VII and VIII: NO stress-energy tensor
-    is defined at all. The statements compute R_{mu nu} and G_{mu nu} and exhibit their form; the
-    words "null dust" and "perfect fluid" describe that form and are not formalized claims about matter.
-    No energy condition appears anywhere in this entry.
-
-
-    KISELEV. The exponent is a real number, so the radial profile uses Real.rpow and the whole Part
-    is stated on r > 0. The two degenerations noted in the Challenge docstring -- w = 1/3 giving Reissner-Nordstrom
-    with Q^2 = -c (note the sign, which runs opposite to the naive guess) and w = -1 giving Schwarzschild-de
-    Sitter with Lambda = 3c -- are recorded in prose and are NOT compared theorems. No claim is made
-    that quintessence with any equation of state is physical.
-
-
-    MATRIX INVERSE AND JUNK VALUES. g^{ad} is Mathlib''s Matrix.inv, which is the true inverse exactly
-    when the determinant is a unit and whose junk value at a singular matrix is 0. Every compared
-    statement is made either under an explicit IsUnit hypothesis or on a region where nondegeneracy
-    of the chart is part of the hypotheses, so no compared statement depends on that junk value. Likewise
-    the coordinate partial derivative is Mathlib''s deriv of a one-variable section and is total,
-    returning 0 off the differentiable locus; every compared statement supplies the differentiability
-    it needs.
-
-
-    RICCI SYMMETRY AND BIANCHI, NOT PROVED. Stated in full under status.scope, in the Challenge and
-    in the Solution docstring. The library does not prove R_{bd} = R_{db} in general and does not
-    prove either Bianchi identity; neither is compared, and no compared proof uses either. Symmetry
-    is exhibited componentwise for each metric treated.
-
-
-    UNIQUENESS, GAUGE-RESTRICTED. exists_mass_of_areal_vacuum is compared as the calculus core of
-    the Jebsen-Birkhoff theorem in the areal-radius static spherically symmetric gauge, and is labelled
-    as such in its docstring rather than advertised as that theorem. Staticity is assumed here and
-    derived there. The link between R_{theta theta} and the ODE r f'' + f - 1 = 0 is proved in the
-    supporting library but is not part of the compared statement, which is the ODE alone.
-
-
-    ONE DISCREPANCY FOUND IN THE SUPPORTING LIBRARY, CORRECTED HERE. A docstring in the library''s
-    de Sitter module describes the spherical chart of flat space as having "eleven nonvanishing Christoffel
-    symbols". Enumerating the table gives NINE nonzero entries in the 64-entry table, six distinct
-    up to the symmetry of the lower indices. The Challenge states nine; the discrepancy is in library
-    prose only and affects no statement, no proof and no compared declaration.
-
-
-    NO OTHER KNOWN DIVERGENCE.'
+  divergences: 'Chart-only: a metric is a matrix-valued function on an open set in R^4; with no atlas,
+    no manifold and no coordinate-independence theorem, so nothing is invariant. Signature (-,+,+,+),
+    Wald/Carroll convention: de Sitter has POSITIVE scalar curvature; the opposite sign is also current.
+    Coordinate order differs by Part: Vaidya (v,r,theta,phi), FLRW comoving. Vaidya is INGOING with
+    g_vr = +1 and needs m only C^1; FLRW is k = 0; Kiselev uses Real.rpow on r > 0. Vacuum means R_uv
+    = 0 (III, V, X, w=0 of XI), R_uv = Lambda g_uv (IV, IX), or G = 8 pi T for the one defined Maxwell
+    tensor (VI); VII and VIII define none. A library docstring calls the flat spherical chart eleven-symbol;
+    it is nine.'
 review:
   status: agent-reviewed
   reviewers:
-  - Claude Code agents (clean rebuild, per-declaration axiom audit over all 54 compared declarations,
-    source-level signature diff against the library, definitional rfl bridges, sorry/native_decide/axiom
-    scan, re-grep of the Mathlib coverage claim with positive controls, item-by-item Crossref and
-    OpenAlex verification of every cited source)
-  notes: 'Reviewed internally, mechanically, on 2026-08-27. The supporting library was rebuilt from
-    scratch against Mathlib v4.32.0 (8,673 build jobs, clean, no warnings). A scan of the library
-    for sorry, sorryAx, native_decide, ofReduceBool, axiom and opaque declarations found none. The
-    Challenge was built and produces exactly twenty-one sorry warnings, one per compared theorem,
-    and no other warning and no error. The Solution was built clean, with no warnings at all. Every
-    one of the twenty-one compared theorems and every one of the thirty-three compared definitions
-    was then checked with #print axioms in a separate file generated directly from comparator.json
-    and compiled against the built artifacts; all fifty-four report exactly propext, Classical.choice
-    and Quot.sound, and the audited set was checked to equal the comparator set exactly. A source-level
-    diff then compared the signature of every one of those fifty-four declarations across three places
-    -- the library module that proves it, the Solution restatement, and the Challenge statement --
-    and found all fifty-four identical modulo the namespace. The thirty-three definitional bridges
-    are compiled in the Solution as rfl in @-form, so implicit arguments are compared as well. The
-    Mathlib zero-curvature claim was re-grepped this session at the pinned revision with positive
-    controls (RiemannianMetric: 40 hit lines; deriv: 12,323) to confirm the grep was actually running,
-    and the structure of RiemannianMetric was read directly to confirm that its pos field is literal
-    positive-definiteness. Bibliographic records were verified item by item against the Crossref and
-    OpenAlex APIs, and the records that disagree with the standard citation are flagged individually
-    in the source notes rather than silently corrected. No human expert other than the author has
-    reviewed the formalization.'
+  - Claude Code agents (clean rebuild, axiom audit over all 54 compared declarations, source-level
+    signature diff, sorry scan, Crossref/OpenAlex verification of every source)
+  notes: Rebuilt from scratch against Mathlib v4.32.0 (8,673 jobs, clean). The Challenge produces
+    exactly 21 sorry warnings, one per compared theorem, and nothing else; the Solution builds clean.
+    All 54 compared declarations report exactly propext, Classical.choice and Quot.sound, and a source
+    diff found all 54 signatures identical across library, Solution and Challenge. Only the author
+    has reviewed it.
 alignment:
   namespace: SchwarzschildVacuum
   statements:
-  - source: Standard textbook general relativity (Wald 1984, ch. 3; MTW 1973; Carroll 2019, ch. 3),
-      the general identity relating the two forms of the vacuum field equations
+  - source: Standard textbook general relativity (Wald 1984 ch. 3; Carroll 2019 ch. 3)
     lean: SchwarzschildVacuum.einstein_eq_zero_iff_ricciFlat
-    module: Challenge
     status: proved
-    note: 'For a chart-level metric that is pointwise symmetric and whose determinant is a unit at
-      x, and for dimension n with (n : R) != 2, the Einstein tensor vanishes at x in every component
-      if and only if the Ricci tensor does. n = 2 is genuinely excluded and the hypothesis is carried,
-      not decorative: in two dimensions the Einstein tensor vanishes identically for every metric.
-      The proof contracts the Einstein tensor with the inverse metric to get (1 - n/2) R = 0.'
-  - source: Schwarzschild (Sitzungsber. Preuss. Akad. Wiss. Berlin, 1916, 189-196)
+    note: G = 0 iff Ricci = 0 for a symmetric metric of unit determinant, n != 2. That hypothesis
+      is carried, not decorative.
+  - source: Schwarzschild 1916
     lean: SchwarzschildVacuum.schwarzschild_ricciFlat
-    module: Challenge
     status: proved
-    note: Every component of the Ricci tensor of diag(-(1 - 2M/r), (1 - 2M/r)^{-1}, r^2, r^2 sin^2
-      theta) vanishes at every point of {0 < r, 2M < r, sin(theta) != 0}. The region is an open subset
-      of R^4 and the statement is chart-local; nothing is claimed at the horizon, in the interior,
-      at r <= 0, at the coordinate poles, or in any extension.
-  - source: Schwarzschild (1916), the field equations in Einstein-tensor form
+    note: Every Ricci component vanishes on {r > 0, r > 2M, sin(theta) != 0}. Nothing is claimed at
+      the horizon or beyond.
+  - source: Schwarzschild 1916, in Einstein-tensor form
     lean: SchwarzschildVacuum.schwarzschild_einstein_eq_zero
-    module: Challenge
     status: proved
-    note: G_{mu nu} = 0 on the same exterior chart, obtained from Ricci-flatness through the compared
-      equivalence theorem at n = 4 rather than by a second independent computation.
-  - source: Schwarzschild (1916); the vanishing of the Ricci scalar is an immediate consequence of
-      Ricci-flatness
+    note: G = 0 on the same chart, obtained from Ricci-flatness via the compared n != 2 equivalence,
+      not by a second computation.
+  - source: Schwarzschild 1916; immediate from Ricci-flatness
     lean: SchwarzschildVacuum.schwarzschild_scalarCurvature_eq_zero
-    module: Challenge
     status: proved
-    note: 'R = 0 on the exterior chart. This is NOT a flatness statement and must not be read as one:
-      the Kretschmann scalar of Schwarzschild is 48 M^2 / r^6, nonzero, and it is not formalized in
-      this entry.'
-  - source: Kottler (Ann. Phys. 361 (1918), 401-462), the Schwarzschild-de Sitter solution
+    note: 'R = 0 on the exterior chart. NOT a flatness statement: the Kretschmann scalar is 48M^2/r^6
+      and is not formalized.'
+  - source: Kottler 1918
     lean: SchwarzschildVacuum.ricci_sds
-    module: Challenge
     status: proved
-    note: R_{mu nu} = Lambda g_{mu nu} for the static spherically symmetric metric with lapse f =
-      1 - 2M/r - Lambda r^2/3. The neighbourhood hypotheses (the lapse and the radius nonzero NEAR
-      r, written with Mathlib's eventually-in-the-neighbourhood-filter) are what differentiating the
-      metric requires and are not removable.
-  - source: Jebsen (Ark. Mat. Ast. Fys. 15 (1921), no. 18; GRG 37 (2005) 2253-2259) and Birkhoff (Relativity
-      and Modern Physics, Harvard Univ. Press, 1923); RESTRICTED to the areal-radius static spherically
-      symmetric gauge
+    note: R_uv = Lambda g_uv for lapse 1 - 2M/r - Lambda r^2/3. The neighbourhood hypotheses are what
+      differentiation needs.
+  - source: Jebsen 1921 and Birkhoff 1923, RESTRICTED to the areal static spherically symmetric gauge
     lean: SchwarzschildVacuum.exists_mass_of_areal_vacuum
-    module: Challenge
     status: proved
-    note: 'On an open interval (a,b) avoiding r = 0, every lapse f with derivative f_1 satisfying
-      1 - f - r f_1 = 0 throughout equals 1 - 2M/r for a single constant M. This is STRICTLY WEAKER
-      than Jebsen''s and Birkhoff''s theorem and is labelled as such: staticity, spherical symmetry,
-      the areal radial coordinate and the reciprocal lapse/radial-metric pair are ASSUMED here, whereas
-      the genuine theorem derives staticity from the vacuum equations for a general, possibly time-dependent,
-      spherically symmetric metric. The compared statement is the ODE alone; the fact that R_{theta
-      theta} = 1 - f - r f'' for this chart is proved in the supporting library but is not part of
-      the statement.'
-  - source: Reissner (Ann. Phys. 355 (1916), 106-120) and Nordstrom (KNAW Proc. 20 (1918), 1238-1245)
+    note: 'On an interval avoiding r = 0, 1 - f - r f1 = 0 forces f = 1 - 2M/r. Weaker than the theorem:
+      staticity is assumed.'
+  - source: Reissner 1916 and Nordstrom 1918
     lean: SchwarzschildVacuum.ricci_rn_thetaTheta
-    module: Challenge
     status: proved
-    note: 'R_{theta theta} = Q^2 / r^2 for the Reissner-Nordstrom metric on {r > 0, f != 0, sin(theta)
-      != 0}. NONZERO whenever the charge is, which is the point: it is the falsifier for the Schwarzschild
-      statements, and it shows the curvature definitions are not accidentally identically zero.'
-  - source: Reissner (1916) and Nordstrom (1918); tracelessness of the electromagnetic stress tensor
-      in four dimensions
+    note: R_thetatheta = Q^2/r^2, NONZERO whenever the charge is. The falsifier for the Schwarzschild
+      statements.
+  - source: Reissner 1916 and Nordstrom 1918; tracelessness of the Maxwell stress tensor in four dimensions
     lean: SchwarzschildVacuum.reissnerNordstrom_scalarCurvature_eq_zero
-    module: Challenge
     status: proved
-    note: 'R = 0 for Reissner-Nordstrom on the same region. Not a vacuum statement: the Ricci tensor
-      is nonzero (see the previous entry) and only its trace vanishes.'
-  - source: 'Jackson / Wald (6.5.2): the invariant of a purely radial electric field'
+    note: 'R = 0 for Reissner-Nordstrom. Not a vacuum statement: the Ricci tensor is nonzero and only
+      its trace vanishes.'
+  - source: Wald 1984 (6.5.2); the invariant of a purely radial electric field
     lean: SchwarzschildVacuum.faradayInvariant_coulomb
-    module: Challenge
     status: proved
-    note: F_{ab} F^{ab} = -(2 Q^2 / r^4) for the Coulomb Faraday tensor F = (Q/r^2) dt ^ dr, with
-      both indices raised by the inverse Reissner-Nordstrom metric. Negative, as it must be for a
-      purely electric field.
-  - source: Reissner (1916) and Nordstrom (1918); the Einstein-Maxwell system, with the stress tensor
-      as in MTW (5.6) and Wald (6.5.4)
+    note: F_ab F^ab = -(2Q^2/r^4) for the Coulomb Faraday tensor, both indices raised by the inverse
+      metric.
+  - source: Reissner 1916 and Nordstrom 1918; stress tensor as in Wald (6.5.4)
     lean: SchwarzschildVacuum.reissnerNordstrom_einstein_eq_maxwell
-    module: Challenge
     status: proved
-    note: 'G_{mu nu} = 8 pi T_{mu nu} in all sixteen components on {r > 0, f != 0, sin(theta) != 0},
-      where T is the Maxwell stress-energy tensor of the Coulomb field as DEFINED in the Challenge
-      and every index is raised with the inverse metric. Both sides are built from compared definitions.
-      This is the Einstein half of the Einstein-Maxwell system only: Maxwell''s equations, div F =
-      0 and dF = 0, are neither stated nor used anywhere.'
-  - source: Vaidya (Proc. Indian Acad. Sci. A 33 (1951); GRG 31 (1999) 121-135); statement in the
-      form of Poisson, A Relativist's Toolkit (2004), eq. (4.35)
+    note: 'G = 8 pi T in all sixteen components for the DEFINED Maxwell tensor. Einstein half only:
+      Maxwell equations are not used.'
+  - source: Vaidya 1951; statement in the form of Poisson (2004) eq. (4.35)
     lean: SchwarzschildVacuum.ricci_vaidya_null_dust
-    module: Challenge
     status: proved
-    note: R_{mu nu} = (2 m'(v) / r^2) delta^v_mu delta^v_nu for the INGOING Eddington-Finkelstein
-      Vaidya metric, in all sixteen components, for an arbitrary mass function differentiable near
-      v. The hypothesis is first-derivative-only and no compared statement requests m''; that is deliberate,
-      because the physically interesting gluings have m of class C^1 but not C^2. This is the only
-      compared metric that is neither static nor diagonal.
-  - source: Vaidya (1951); the trace of a null Ricci tensor
+    note: R_uv = (2m'(v)/r^2) delta^v_u delta^v_v, ingoing chart, for a once-differentiable mass function.
+      No m'' is requested.
+  - source: Vaidya 1951; the trace of a null Ricci tensor
     lean: SchwarzschildVacuum.vaidya_scalarCurvature_eq_zero
-    module: Challenge
     status: proved
-    note: 'R = 0 for the ingoing Vaidya metric. Not a cancellation: the only nonvanishing Ricci component
-      is R_{vv} and the ingoing inverse metric has g^{vv} = 0, so the trace vanishes because the Ricci
-      tensor is null.'
-  - source: Vaidya (1951); the field equations in Einstein-tensor form
+    note: 'R = 0. Not a cancellation: the only nonvanishing component is R_vv and the ingoing inverse
+      metric has g^vv = 0.'
+  - source: Vaidya 1951, in Einstein-tensor form
     lean: SchwarzschildVacuum.einstein_vaidya
-    module: Challenge
     status: proved
-    note: 'G_{mu nu} equals the same rank-one null table, since R = 0. Stated against a compared definition
-      (the Vaidya Ricci table) rather than re-expanded. NO stress-energy tensor is defined: ''null
-      dust'' describes the form of the computed curvature and is not a formalized claim about matter.'
-  - source: Friedmann (Z. Phys. 10 (1922) 377-386) and Lemaitre (Ann. Soc. Sci. Bruxelles A47 (1927)
-      49-59; MNRAS 91 (1931) 483-490); expression as in Carroll (2019), eq. (8.67)
+    note: G equals the same rank-one null table, since R = 0. No stress tensor is defined; "null dust"
+      describes the form only.
+  - source: Friedmann 1922 and Lemaitre 1927; expression as in Carroll (8.67)
     lean: SchwarzschildVacuum.friedmann_first
-    module: Challenge
     status: proved
-    note: 'G_tt = 3 (adot/a)^2 for spatially flat FLRW in Cartesian comoving coordinates, wherever
-      the scale factor is nonzero and twice differentiable near t. Compared in EINSTEIN-TENSOR form:
-      no fluid is defined, and H^2 = 8 pi rho / 3 follows only after one is posited and coupled through
-      G = 8 pi T, which is not formalized. Spatially flat (k = 0) only.'
-  - source: Friedmann (1922) and Lemaitre (1927); expression as in Carroll (2019), eq. (8.68)
+    note: 'G_tt = 3(adot/a)^2 for flat FLRW. Einstein-tensor form only: no fluid is defined, so H^2
+      = 8 pi rho/3 does not follow.'
+  - source: Friedmann 1922 and Lemaitre 1927; expression as in Carroll (8.68)
     lean: SchwarzschildVacuum.friedmann_second
-    module: Challenge
     status: proved
-    note: G_ii = -(2 a addot + adot^2) for each of the three spatial directions, same hypotheses and
-      same caveats as the first equation. The index hypothesis i != 0 is carried explicitly.
-  - source: Friedmann (1922) and Lemaitre (1927); isotropy of the flat FLRW source
+    note: G_ii = -(2 a addot + adot^2) for each spatial i, same hypotheses and caveat. The hypothesis
+      i != 0 is carried.
+  - source: Friedmann 1922 and Lemaitre 1927; isotropy of the flat FLRW source
     lean: SchwarzschildVacuum.einstein_flrw_offDiag
-    module: Challenge
     status: proved
-    note: Every off-diagonal component of the Einstein tensor of flat FLRW vanishes -- no momentum
-      flux and no anisotropic stress -- which is what makes the two Friedmann equations the whole
-      content of the field equations for this metric.
-  - source: de Sitter space in the static patch; standard textbook result (Hawking and Ellis section
-      5.2; Carroll 2019)
+    note: 'Every off-diagonal component of G vanishes: no momentum flux, no anisotropic stress.'
+  - source: de Sitter space in the static patch; standard textbook result
     lean: SchwarzschildVacuum.ricci_deSitterStatic
-    module: Challenge
     status: proved
-    note: 'R_{mu nu} = (3/L^2) g_{mu nu} on {r > 0, f != 0, sin(theta) != 0} for L != 0: the static
-      patch is an Einstein space with Lambda = 3/L^2. The cosmological horizon r = L is excluded,
-      since the chart degenerates there.'
-  - source: de Sitter space; the scalar curvature of a maximally symmetric four-space
+    note: R_uv = (3/L^2) g_uv on {r > 0, f != 0, sin(theta) != 0}. The cosmological horizon r = L
+      is excluded.
+  - source: de Sitter space; scalar curvature of a maximally symmetric four-space
     lean: SchwarzschildVacuum.deSitterStatic_scalarCurvature
-    module: Challenge
     status: proved
-    note: 'R = 12/L^2, constant and POSITIVE. This is the sharpest single check that the sign convention
-      fixed in the Challenge is the one advertised: in the opposite overall convention this number
-      is negative, and de Sitter would be indistinguishable from anti-de Sitter by this statement.'
+    note: R = 12/L^2, constant and POSITIVE. The sharpest check that the sign convention is the one
+      advertised.
   - source: Elementary; Minkowski space in spherical coordinates
     lean: SchwarzschildVacuum.minkowskiSpherical_ricciFlat
-    module: Challenge
     status: proved
-    note: 'Ricci-flat wherever r != 0 and sin(theta) != 0. Compared deliberately despite being elementary:
-      the areal-radius chart of FLAT space has nine nonvanishing entries in its 64-entry Christoffel
-      table, so this tests that the Riemann and Ricci definitions produce zero by CANCELLATION among
-      nonzero connection coefficients rather than from an empty table -- which is exactly the failure
-      mode a curvature definition could have while still proving every vacuum theorem in this entry.'
-  - source: Kiselev (Class. Quantum Grav. 20 (2003) 1187-1197)
+    note: 'Ricci-flat. Compared deliberately: this chart of FLAT space has nine nonzero Christoffel
+      entries, testing cancellation.'
+  - source: Kiselev 2003
     lean: SchwarzschildVacuum.ricci_kiselev_thetaTheta
-    module: Challenge
     status: proved
-    note: R_{theta theta} = -(3 w c r^{-(3w+1)}) for the quintessence lapse on r > 0 with the lapse
-      nonzero near r. Nonzero whenever w and c are, so this is a third nonvanishing-curvature control.
-      The exponent is a REAL power (Real.rpow). The degenerations at w = 1/3 (Reissner-Nordstrom with
-      Q^2 = -c, note the sign) and w = -1 (Schwarzschild-de Sitter with Lambda = 3c) are recorded
-      in the docstring and are NOT compared.
-  - source: Kiselev (2003); the dust case
+    note: R_thetatheta = -(3wc r^-(3w+1)) on r > 0, nonzero whenever w and c are. The exponent is
+      a real power (Real.rpow).
+  - source: Kiselev 2003; the dust case
     lean: SchwarzschildVacuum.kiselev_ricciFlat_of_w_eq_zero
-    module: Challenge
     status: proved
-    note: At w = 0 the Kiselev metric is Ricci-flat, because f = 1 - 2M/r - c/r is Schwarzschild with
-      mass M + c/2 and the c/r term is a pure mass shift carrying no curvature of its own.
+    note: 'At w = 0 the metric is Ricci-flat: f = 1 - 2M/r - c/r is Schwarzschild with mass M + c/2,
+      a pure mass shift.'
 acknowledgements: Mathlib and its contributors; the Lean FRO for Lean, Comparator, lean4export and
   Verso; the Mathlib Initiative for the formalization.yaml standard.
