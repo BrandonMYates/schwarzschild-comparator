@@ -6,7 +6,6 @@ name = "mathlib"
 git = "https://github.com/leanprover-community/mathlib4.git"
 rev = "v4.32.0"
 
-# The proof development.
 #
 # The proof development. Palomar requires a credential-free public URL and a full
 # 40-char lowercase SHA.
